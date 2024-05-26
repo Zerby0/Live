@@ -22,6 +22,7 @@ class StepCounterService : Service(), SensorEventListener {
     private lateinit var sensorManager: SensorManager
     private var stepCounterSensor: Sensor? = null
     private var stepCount = 0
+    private var initialStepCount = -1
 
     override fun onCreate() {
         super.onCreate()
@@ -36,21 +37,22 @@ class StepCounterService : Service(), SensorEventListener {
         if (stepCounterSensor != null) {
             sensorManager.registerListener(this, stepCounterSensor, SensorManager.SENSOR_DELAY_UI)
         } else {
-            Log.e("StepCounterService", "Step counter sensor not available!")
+            Log.e("StepCounterService", "Sensore contapassi non disponibile!")
+            stopSelf() // Ferma il servizio se il sensore non è disponibile
         }
 
         // Avvia il servizio in foreground
         startForegroundService()
     }
 
-    //Con START_STICKY se l'attività termina cercherà di riavviarsi
+    // Con START_STICKY se l'attività termina cercherà di riavviarsi
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         return START_STICKY
     }
 
-    //Serve per lasciare il servizio in esecuzione anche se l'app non è aperta
+    // Serve per lasciare il servizio in esecuzione anche se l'app non è aperta
     private fun startForegroundService() {
-        //Creazione del canale di notifica (per Android 8.0+)
+        // Creazione del canale di notifica (per Android 8.0+)
         val channelId = "StepCounterServiceChannel"
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel = NotificationChannel(
@@ -66,7 +68,7 @@ class StepCounterService : Service(), SensorEventListener {
         val pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent,
             PendingIntent.FLAG_IMMUTABLE)
 
-        //Fa il messaggio di notifica che dice che conta i passi
+        // Fa il messaggio di notifica che dice che conta i passi
         val notification: Notification = NotificationCompat.Builder(this, channelId)
             .setContentTitle("Servizio di StepCounter")
             .setContentText("Contando i tuoi passi...")
@@ -79,11 +81,14 @@ class StepCounterService : Service(), SensorEventListener {
 
     override fun onSensorChanged(event: SensorEvent?) {
         if (event != null && event.sensor.type == Sensor.TYPE_STEP_COUNTER) {
-            // Aggiorna il contapassi
-            stepCount = event.values[0].toInt()
-            Log.d("StepCounterService", "Step count: $stepCount")
+            val totalStepCount = event.values[0].toInt()
+            if (initialStepCount < 0) {
+                initialStepCount = totalStepCount
+            }
+            stepCount = totalStepCount - initialStepCount
+            Log.d("StepCounterService", "Conteggio passi: $stepCount")
 
-            // Invia i dati tramite broadcast locale ()
+            // Invia i dati tramite broadcast locale
             val intent = Intent("StepCounterUpdate")
             intent.putExtra("stepCount", stepCount)
             LocalBroadcastManager.getInstance(this).sendBroadcast(intent)

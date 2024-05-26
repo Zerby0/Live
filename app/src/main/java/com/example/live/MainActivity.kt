@@ -32,8 +32,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -41,8 +39,8 @@ class MainActivity : AppCompatActivity() {
         Log.v(ContentValues.TAG, "Si sta avviando l'app")
         val userData: MutableMap<String, String> = HashMap()
 
-        userData["name"] = "Tommy"
-        userData["email"] = "gmail@gmail.com"
+        userData["name"] = "Sim"
+        userData["email"] = "spaghetti@gmail.com"
         userData["subscriptionPlan"] = "premium"
 
         SDK.identify("28dvm2jfa", userData)
