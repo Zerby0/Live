@@ -1,13 +1,38 @@
 package com.example.live
 
-import  android.content.ContentValues
+import android.content.ContentValues
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.logrocket.core.SDK
 import android.content.Intent
 import android.widget.Button
+import android.Manifest
+import android.content.BroadcastReceiver
+import android.content.pm.PackageManager
+import android.os.Build
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
+import android.content.Context
+import android.content.IntentFilter
+import android.widget.TextView
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
+
 class MainActivity : AppCompatActivity() {
+
+    private val ACTIVITY_RECOGNITION_REQUEST_CODE = 100
+
+    private lateinit var stepCountTextView: TextView
+    private val stepCountReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            val stepCount = intent?.getIntExtra("stepCount", 0) ?: 0
+            Log.d("MainActivity", "Received step count: $stepCount")
+            stepCountTextView.text = "Steps: $stepCount"
+        }
+    }
+
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -15,8 +40,8 @@ class MainActivity : AppCompatActivity() {
         Log.v(ContentValues.TAG, "Si sta avviando l'app")
         val userData: MutableMap<String, String> = HashMap()
 
-        userData["name"] = "Sim"
-        userData["email"] = "trial@gmail.com"
+        userData["name"] = "Tommy"
+        userData["email"] = "gmail@gmail.com"
         userData["subscriptionPlan"] = "premium"
 
         SDK.identify("28dvm2jfa", userData)
@@ -31,6 +56,46 @@ class MainActivity : AppCompatActivity() {
         biometrics.setOnClickListener {
             val myIntent = Intent(it.context, BiometricsActivity::class.java)
             startActivity(myIntent)
+        }
+
+        stepCountTextView = findViewById(R.id.passi_text)
+
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACTIVITY_RECOGNITION)
+                != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACTIVITY_RECOGNITION),
+                    ACTIVITY_RECOGNITION_REQUEST_CODE)
+            } else {
+                startStepCounterService()
+            }
+        } else {
+            startStepCounterService()
+        }
+        LocalBroadcastManager.getInstance(this)
+            .registerReceiver(stepCountReceiver, IntentFilter("StepCounterUpdate"))
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(stepCountReceiver)
+    }
+
+    private fun startStepCounterService() {
+        val intent = Intent(this, StepCounterService::class.java)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            startForegroundService(intent)
+        } else {
+            startService(intent)
+        }
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == ACTIVITY_RECOGNITION_REQUEST_CODE) {
+            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                startStepCounterService()
+            }
         }
     }
 }
