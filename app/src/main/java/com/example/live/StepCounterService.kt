@@ -43,11 +43,14 @@ class StepCounterService : Service(), SensorEventListener {
         startForegroundService()
     }
 
+    //Con START_STICKY se l'attività termina cercherà di riavviarsi
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         return START_STICKY
     }
 
+    //Serve per lasciare il servizio in esecuzione anche se l'app non è aperta
     private fun startForegroundService() {
+        //Creazione del canale di notifica (per Android 8.0+)
         val channelId = "StepCounterServiceChannel"
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel = NotificationChannel(
@@ -63,9 +66,10 @@ class StepCounterService : Service(), SensorEventListener {
         val pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent,
             PendingIntent.FLAG_IMMUTABLE)
 
+        //Fa il messaggio di notifica che dice che conta i passi
         val notification: Notification = NotificationCompat.Builder(this, channelId)
-            .setContentTitle("Step Counter Service")
-            .setContentText("Counting your steps...")
+            .setContentTitle("Servizio di StepCounter")
+            .setContentText("Contando i tuoi passi...")
             .setSmallIcon(R.mipmap.ic_launcher)
             .setContentIntent(pendingIntent)
             .build()

@@ -23,6 +23,7 @@ class MainActivity : AppCompatActivity() {
     private val ACTIVITY_RECOGNITION_REQUEST_CODE = 100
 
     private lateinit var stepCountTextView: TextView
+    //Broadcast receiver per i passi contati
     private val stepCountReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             val stepCount = intent?.getIntExtra("stepCount", 0) ?: 0
@@ -58,9 +59,10 @@ class MainActivity : AppCompatActivity() {
             startActivity(myIntent)
         }
 
+        //Variabile da cambiare per conta passi
         stepCountTextView = findViewById(R.id.passi_text)
 
-
+        //Verifica i permessi a run time in base alla versione Android (dalla <=10 non serve, quindi non controlla)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACTIVITY_RECOGNITION)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -72,15 +74,18 @@ class MainActivity : AppCompatActivity() {
         } else {
             startStepCounterService()
         }
+        //Prende i dati broadcast
         LocalBroadcastManager.getInstance(this)
             .registerReceiver(stepCountReceiver, IntentFilter("StepCounterUpdate"))
     }
 
     override fun onDestroy() {
         super.onDestroy()
+        //Disattiva il BroadcastReceiver
         LocalBroadcastManager.getInstance(this).unregisterReceiver(stepCountReceiver)
     }
 
+    //Starta il servizio
     private fun startStepCounterService() {
         val intent = Intent(this, StepCounterService::class.java)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -90,6 +95,9 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    //Controlla se la richiesta di permessi è stata effettuata per il codice ACTIVITY_RECOGNITION_REQUEST_CODE,
+    //Se la richiesta di permessi ha avuto successo (cioè grantResults[0] è uguale a PackageManager.PERMISSION_GRANTED),
+    //allora il servizio di conteggio dei passi viene avviato mediante la chiamata a startStepCounterService()
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == ACTIVITY_RECOGNITION_REQUEST_CODE) {
