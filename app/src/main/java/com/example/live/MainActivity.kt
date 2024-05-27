@@ -21,7 +21,7 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager
 
 class MainActivity : AppCompatActivity() {
 
-    private val ACTIVITY_RECOGNITION_REQUEST_CODE = 100
+    private val REQUEST_CODE = 100
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var stepCountTextView: TextView
     //Broadcast receiver per i passi contati
@@ -66,7 +66,7 @@ class MainActivity : AppCompatActivity() {
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACTIVITY_RECOGNITION)
                 != PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACTIVITY_RECOGNITION),
-                    ACTIVITY_RECOGNITION_REQUEST_CODE)
+                    REQUEST_CODE)
             } else {
                 startStepCounterService()
             }
@@ -107,7 +107,7 @@ class MainActivity : AppCompatActivity() {
     //allora il servizio di conteggio dei passi viene avviato mediante la chiamata a startStepCounterService()
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == ACTIVITY_RECOGNITION_REQUEST_CODE) {
+        if (requestCode == REQUEST_CODE) {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 startStepCounterService()
             }
