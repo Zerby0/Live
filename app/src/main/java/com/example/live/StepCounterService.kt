@@ -7,6 +7,7 @@ import android.app.PendingIntent
 import android.app.Service
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
@@ -23,6 +24,7 @@ class StepCounterService : Service(), SensorEventListener {
     private var stepCounterSensor: Sensor? = null
     private var stepCount = 0
     private var initialStepCount = -1
+    private lateinit var sharedPreferences: SharedPreferences
 
     override fun onCreate() {
         super.onCreate()
@@ -32,6 +34,10 @@ class StepCounterService : Service(), SensorEventListener {
 
         // Prendi il sensore di tipo STEP_COUNTER (contapassi)
         stepCounterSensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER)
+
+        // Inizializza SharedPreferences
+        sharedPreferences = getSharedPreferences("stepCounterPrefs", Context.MODE_PRIVATE)
+        stepCount = sharedPreferences.getInt("stepCount", 0)
 
         // Registra il listener per il sensore di contapassi se il sensore è disponibile
         if (stepCounterSensor != null) {
@@ -87,6 +93,11 @@ class StepCounterService : Service(), SensorEventListener {
             }
             stepCount = totalStepCount - initialStepCount
             Log.d("StepCounterService", "Conteggio passi: $stepCount")
+
+            // Salva il conteggio dei passi in SharedPreferences
+            val editor = sharedPreferences.edit()
+            editor.putInt("stepCount", stepCount)
+            editor.apply()
 
             // Invia i dati tramite broadcast locale
             val intent = Intent("StepCounterUpdate")

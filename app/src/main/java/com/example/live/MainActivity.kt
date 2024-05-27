@@ -15,13 +15,14 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import android.content.Context
 import android.content.IntentFilter
+import android.content.SharedPreferences
 import android.widget.TextView
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 
 class MainActivity : AppCompatActivity() {
 
     private val ACTIVITY_RECOGNITION_REQUEST_CODE = 100
-
+    private lateinit var sharedPreferences: SharedPreferences
     private lateinit var stepCountTextView: TextView
     //Broadcast receiver per i passi contati
     private val stepCountReceiver = object : BroadcastReceiver() {
@@ -39,8 +40,8 @@ class MainActivity : AppCompatActivity() {
         Log.v(ContentValues.TAG, "Si sta avviando l'app")
         val userData: MutableMap<String, String> = HashMap()
 
-        userData["name"] = "Sim"
-        userData["email"] = "spaghetti@gmail.com"
+        userData["name"] = "Tommy"
+        userData["email"] = "alloranonsopiùcosascriverecomemailinventataperfarridere@gmail.com"
         userData["subscriptionPlan"] = "premium"
 
         SDK.identify("28dvm2jfa", userData)
@@ -72,6 +73,14 @@ class MainActivity : AppCompatActivity() {
         } else {
             startStepCounterService()
         }
+
+        // Inizializza SharedPreferences
+        sharedPreferences = getSharedPreferences("stepCounterPrefs", Context.MODE_PRIVATE)
+
+        // Carica il conteggio dei passi salvato e aggiorna la TextView
+        val savedStepCount = sharedPreferences.getInt("stepCount", 0)
+        stepCountTextView.text = savedStepCount.toString()
+
         //Prende i dati broadcast
         LocalBroadcastManager.getInstance(this)
             .registerReceiver(stepCountReceiver, IntentFilter("StepCounterUpdate"))
