@@ -18,18 +18,25 @@ import android.content.IntentFilter
 import android.content.SharedPreferences
 import android.widget.TextView
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import kotlin.math.round
 
 class MainActivity : AppCompatActivity() {
 
     private val REQUEST_CODE = 100
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var stepCountTextView: TextView
+    private lateinit var calorieCountTextView: TextView
+    private fun countYourCalories(steps : Int) : Int {
+        return round(steps * 0.04).toInt()
+    }
     //Broadcast receiver per i passi contati
     private val stepCountReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             val stepCount = intent?.getIntExtra("stepCount", 0) ?: 0
             Log.d("MainActivity", "Received step count: $stepCount")
             stepCountTextView.text = "Steps: $stepCount"
+            val caloriesBurned = countYourCalories(stepCount)
+            calorieCountTextView.text = "Calories: $caloriesBurned"
         }
     }
 
@@ -60,6 +67,7 @@ class MainActivity : AppCompatActivity() {
 
         //Variabile da cambiare per conta passi
         stepCountTextView = findViewById(R.id.passi_text)
+        calorieCountTextView = findViewById(R.id.calorie_bruciate_text)
 
         //Verifica i permessi a run time in base alla versione Android (dalla <=10 non serve, quindi non controlla)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
