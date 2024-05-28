@@ -44,8 +44,8 @@ class MainActivity : AppCompatActivity() {
         Log.v(ContentValues.TAG, "Si sta avviando l'app")
         val userData: MutableMap<String, String> = HashMap()
 
-        userData["name"] = "Tommy"
-        userData["email"] = "alloranonsopiùcosascriverecomemailinventataperfarridere@gmail.com"
+        userData["name"] = "Andrea"
+        userData["email"] = "AndreaPadovan@gmail.com"
         userData["subscriptionPlan"] = "premium"
 
         SDK.identify("28dvm2jfa", userData)

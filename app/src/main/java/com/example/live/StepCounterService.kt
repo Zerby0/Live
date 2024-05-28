@@ -37,6 +37,9 @@ class StepCounterService : Service(), SensorEventListener {
         // Prendi il sensore di tipo STEP_COUNTER (contapassi)
         stepCounterSensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER)
 
+        // Avvia il servizio in foreground
+        startForegroundService()
+
         // Inizializza SharedPreferences
         sharedPreferences = getSharedPreferences("stepCounterPrefs", Context.MODE_PRIVATE)
         stepCount = sharedPreferences.getInt("stepCount", 0)
@@ -49,8 +52,6 @@ class StepCounterService : Service(), SensorEventListener {
             stopSelf() // Ferma il servizio se il sensore non è disponibile
         }
 
-        // Avvia il servizio in foreground
-        startForegroundService()
     }
 
     // Con START_STICKY se l'attività termina cercherà di riavviarsi
@@ -79,7 +80,7 @@ class StepCounterService : Service(), SensorEventListener {
         // Fa il messaggio di notifica che dice che conta i passi
         val notification: Notification = NotificationCompat.Builder(this, channelId)
             .setContentTitle("Servizio di StepCounter")
-            .setContentText("Contando i tuoi passi...")
+            .setContentText("Contando i tuoi passi: $stepCount")
             .setSmallIcon(R.mipmap.ic_launcher)
             .setContentIntent(pendingIntent)
             .build()
