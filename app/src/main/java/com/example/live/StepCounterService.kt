@@ -81,7 +81,7 @@ class StepCounterService : Service(), SensorEventListener {
         val notification: Notification = NotificationCompat.Builder(this, channelId)
             .setContentTitle("Servizio di StepCounter")
             .setContentText("Contando i tuoi passi: $stepCount")
-            .setSmallIcon(R.mipmap.ic_launcher)
+            .setSmallIcon(R.drawable.logo)
             .setContentIntent(pendingIntent)
             .build()
 

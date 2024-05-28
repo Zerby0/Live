@@ -66,6 +66,8 @@ dependencies {
     androidTestImplementation 'androidx.compose.ui:ui-test-junit4'
     debugImplementation 'androidx.compose.ui:ui-tooling'
     debugImplementation 'androidx.compose.ui:ui-test-manifest'
+    //Per grafici
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
     //Per LogRocket
     implementation 'com.logrocket:logrocket:1.33.6'
     //Per layout
