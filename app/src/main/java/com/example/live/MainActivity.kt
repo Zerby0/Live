@@ -18,7 +18,6 @@ import android.content.IntentFilter
 import android.content.SharedPreferences
 import android.widget.TextView
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
-import kotlin.math.round
 
 class MainActivity : AppCompatActivity() {
 
@@ -26,17 +25,15 @@ class MainActivity : AppCompatActivity() {
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var stepCountTextView: TextView
     private lateinit var calorieCountTextView: TextView
-    private fun countYourCalories(steps : Int) : Int {
-        return round(steps * 0.04).toInt()
-    }
+
     //Broadcast receiver per i passi contati
     private val stepCountReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             val stepCount = intent?.getIntExtra("stepCount", 0) ?: 0
+            val caloriesCount = intent?.getDoubleExtra("calorieCount", 0.0) ?: 0.0
             Log.d("MainActivity", "Received step count: $stepCount")
             stepCountTextView.text = "Steps: $stepCount"
-            val caloriesBurned = countYourCalories(stepCount)
-            calorieCountTextView.text = "Calories: $caloriesBurned"
+            calorieCountTextView.text = "Calories: ${caloriesCount.toInt()}"
         }
     }
 
@@ -87,8 +84,9 @@ class MainActivity : AppCompatActivity() {
 
         // Carica il conteggio dei passi salvato e aggiorna la TextView
         val savedStepCount = sharedPreferences.getInt("stepCount", 0)
-        stepCountTextView.text = savedStepCount.toString()
-
+        val savedCalorieCount = sharedPreferences.getFloat("calorieCount", 0.0f)
+        stepCountTextView.text = "Steps: $savedStepCount"
+        calorieCountTextView.text = "Calories: ${savedCalorieCount.toInt()}"
         //Prende i dati broadcast
         LocalBroadcastManager.getInstance(this)
             .registerReceiver(stepCountReceiver, IntentFilter("StepCounterUpdate"))

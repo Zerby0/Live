@@ -23,7 +23,9 @@ class StepCounterService : Service(), SensorEventListener {
     private lateinit var sensorManager: SensorManager
     private var stepCounterSensor: Sensor? = null
     private var stepCount = 0
+    private var calorieCount = 0.0
     private var initialStepCount = -1
+    private val caloriesPerStep  = 0.04
     private lateinit var sharedPreferences: SharedPreferences
 
     override fun onCreate() {
@@ -92,16 +94,19 @@ class StepCounterService : Service(), SensorEventListener {
                 initialStepCount = totalStepCount
             }
             stepCount = totalStepCount - initialStepCount
+            calorieCount = stepCount * caloriesPerStep
             Log.d("StepCounterService", "Conteggio passi: $stepCount")
 
             // Salva il conteggio dei passi in SharedPreferences
             val editor = sharedPreferences.edit()
             editor.putInt("stepCount", stepCount)
+            editor.putFloat("calorieCount", calorieCount.toFloat())
             editor.apply()
 
             // Invia i dati tramite broadcast locale
             val intent = Intent("StepCounterUpdate")
             intent.putExtra("stepCount", stepCount)
+            intent.putExtra("calorieCount", calorieCount)
             LocalBroadcastManager.getInstance(this).sendBroadcast(intent)
         }
     }

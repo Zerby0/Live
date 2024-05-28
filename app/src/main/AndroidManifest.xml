@@ -24,7 +24,6 @@
                         android:enabled="true"
                         android:exported="true"
                         android:foregroundServiceType="health"/>
-
             <activity
                 android:name=".MainActivity"
                 android:exported="true"
