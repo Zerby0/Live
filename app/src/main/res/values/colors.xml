@@ -11,4 +11,7 @@
     <color name="lite_green">#CCE5E3</color>
     <color name="lite_yellow">#FEE1B6 </color>
     <color name="strong_grey">#2F2F2F</color>
+    <color name="strong_blue">#054A91</color>
+    <color name="light_red">#E94F37</color>
+    <color name="light_yellow">#F9DB6D</color>
 </resources>

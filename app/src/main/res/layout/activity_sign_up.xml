@@ -8,6 +8,7 @@
 
     <EditText
         android:id="@+id/editTextText4"
+        style="@style/EditTextStyle"
         android:layout_width="wrap_content"
         android:layout_height="50dp"
         android:ems="10"
@@ -15,13 +16,14 @@
         android:inputType="text"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.502"
+        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.536" />
+        app:layout_constraintVertical_bias="0.356" />
 
     <EditText
         android:id="@+id/editTextText5"
+        style = "@style/EditTextStyle"
         android:layout_width="wrap_content"
         android:layout_height="50dp"
         android:ems="10"
@@ -36,11 +38,12 @@
 
     <EditText
         android:id="@+id/editTextText6"
+        style = "@style/EditTextStyle"
         android:layout_width="wrap_content"
         android:layout_height="50dp"
         android:layout_marginTop="32dp"
         android:ems="10"
-        android:hint="Confirm password"
+        android:hint="Conferma password"
         android:inputType="textPassword"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -54,17 +57,20 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
-        android:text="SIGN UP"
+        android:text="ISCRIVITI"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextText6" />
+        app:layout_constraintTop_toBottomOf="@+id/editTextText6"
+        app:layout_constraintVertical_bias="0.332" />
 
     <TextView
         android:id="@+id/textView2"
+        style = "@style/TextViewStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Already have an account? Sign in"
+        android:text="Hai già un account? Accedi qui!"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

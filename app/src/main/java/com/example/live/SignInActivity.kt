@@ -1,5 +1,6 @@
 package com.example.live
 
+import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -20,6 +21,18 @@ class SignInActivity : AppCompatActivity() {
         binding = ActivitySignInBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        // Check if user had already logged in, skip everything and switch to MainActivity
+        val sharedPref = getSharedPreferences("logged_users", Context.MODE_PRIVATE)
+        val loggedUser = sharedPref.getString("user", null)
+        val loggedPw = sharedPref.getString("pw", null)
+
+        if (loggedUser != null && loggedPw != null) {
+            fbAuth.signInWithEmailAndPassword(loggedUser, loggedPw)
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
+
         // Send user to sign-up if not registered
         binding.textView3.setOnClickListener {
             intent = Intent(this, SignUpActivity::class.java)
@@ -38,6 +51,14 @@ class SignInActivity : AppCompatActivity() {
             } else {
                 fbAuth.signInWithEmailAndPassword(userMail, pw).addOnCompleteListener(this) {
                     if (it.isSuccessful) {
+                        // Save login data in SharedPreferences for future auto-sign-in
+                        val edit = sharedPref.edit()
+                        edit.putString("user", userMail)
+                        edit.putString("pw", pw)
+                        // Close editor
+                        edit.apply()
+
+                        // Move user to Main Activity
                         val intent = Intent(this, MainActivity::class.java)
                         startActivity(intent)
                         finish()

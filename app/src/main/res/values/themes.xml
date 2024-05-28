@@ -4,8 +4,27 @@
     <!-- Base application theme. -->
     <style name="Theme.Live" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/lite_pink</item>
-        <item name="colorPrimaryVariant">@color/lite_green</item>
-        <item name="colorOnPrimary">@color/lite_yellow</item>
+        <item name="colorPrimary">@color/strong_blue</item>
+        <item name="colorPrimaryVariant">@color/light_red</item>
+        <item name="colorOnPrimary">@color/light_yellow</item>
     </style>
+
+    <!-- Button theme. -->
+    <style name="ButtonStyle" parent="Widget.MaterialComponents.Button">
+        <item name="android:background">@color/purple_200</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <!-- TextView theme. -->
+    <style name="TextViewStyle" parent="Widget.MaterialComponents.TextView">
+        <item name="android:textColor">@color/light_yellow</item>
+    </style>
+
+    <!-- EditText theme. -->
+    <style name="EditTextStyle" parent="Widget.AppCompat.EditText">
+        <item name="android:background">@color/lite_yellow</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:gravity">center</item>
+    </style>
+
 </resources>
