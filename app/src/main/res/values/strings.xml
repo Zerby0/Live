@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">Live</string>
     <string name="back">BACK</string>
+    <string name="title_activity_sign_up">SignUpActivity</string>
+    <string name="title_activity_sign_in">SignInActivity</string>
     <string name="step_text">Steps</string>
     <string name="calories_text">Calories</string>
 
