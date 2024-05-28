@@ -24,12 +24,16 @@ class MainActivity : AppCompatActivity() {
     private val REQUEST_CODE = 100
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var stepCountTextView: TextView
+    private lateinit var calorieCountTextView: TextView
+
     //Broadcast receiver per i passi contati
     private val stepCountReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             val stepCount = intent?.getIntExtra("stepCount", 0) ?: 0
+            val caloriesCount = intent?.getDoubleExtra("calorieCount", 0.0) ?: 0.0
             Log.d("MainActivity", "Received step count: $stepCount")
             stepCountTextView.text = "Steps: $stepCount"
+            calorieCountTextView.text = "Calories: ${caloriesCount.toInt()}"
         }
     }
 
@@ -40,8 +44,8 @@ class MainActivity : AppCompatActivity() {
         Log.v(ContentValues.TAG, "Si sta avviando l'app")
         val userData: MutableMap<String, String> = HashMap()
 
-        userData["name"] = "Tommy"
-        userData["email"] = "alloranonsopiùcosascriverecomemailinventataperfarridere@gmail.com"
+        userData["name"] = "Andrea"
+        userData["email"] = "AndreaPadovan@gmail.com"
         userData["subscriptionPlan"] = "premium"
 
         SDK.identify("28dvm2jfa", userData)
@@ -60,6 +64,7 @@ class MainActivity : AppCompatActivity() {
 
         //Variabile da cambiare per conta passi
         stepCountTextView = findViewById(R.id.passi_text)
+        calorieCountTextView = findViewById(R.id.calorie_bruciate_text)
 
         //Verifica i permessi a run time in base alla versione Android (dalla <=10 non serve, quindi non controlla)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
@@ -79,8 +84,9 @@ class MainActivity : AppCompatActivity() {
 
         // Carica il conteggio dei passi salvato e aggiorna la TextView
         val savedStepCount = sharedPreferences.getInt("stepCount", 0)
-        stepCountTextView.text = savedStepCount.toString()
-
+        val savedCalorieCount = sharedPreferences.getFloat("calorieCount", 0.0f)
+        stepCountTextView.text = "Steps: $savedStepCount"
+        calorieCountTextView.text = "Calories: ${savedCalorieCount.toInt()}"
         //Prende i dati broadcast
         LocalBroadcastManager.getInstance(this)
             .registerReceiver(stepCountReceiver, IntentFilter("StepCounterUpdate"))

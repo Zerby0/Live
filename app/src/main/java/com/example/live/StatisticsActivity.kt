@@ -11,6 +11,5 @@ class StatisticsActivity : AppCompatActivity() {
         previous.setOnClickListener {
             finish()
         }
-
     }
 }

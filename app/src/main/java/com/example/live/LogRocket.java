@@ -13,9 +13,7 @@ public class LogRocket extends Application {
         SDK.init(
                 this,
                 base,
-                options -> {
-                    options.setAppID("zerbys/live");
-                }
+                options -> options.setAppID("zerbys/live")
         );
     }
 }

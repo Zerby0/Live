@@ -8,11 +8,12 @@
         android:id="@+id/passi_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:text="Passi: 0"
-        android:textSize="24sp"
+        android:layout_marginTop="376dp"
+        android:text="Steps: 0"
+        android:textColor="@color/lite_green"
+        android:textSize="40sp"
         android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -20,29 +21,33 @@
         android:id="@+id/calorie_bruciate_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
-        android:text="Calorie bruciate: 0"
+        android:layout_marginTop="24dp"
+        android:text="Calories: 0"
+        android:textColor="@color/lite_yellow"
         android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/passi_text" />
+        app:layout_constraintTop_toBottomOf="@id/passi_text"
+        app:layout_constraintVertical_bias="0.015" />
 
     <Button
         android:id="@+id/statistiche_settimanali_button"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="576dp"
         android:text="Statistiche settimanali"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/calorie_bruciate_text" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/dati_biometrici_button"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="12dp"
         android:text="Dati biometrici"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/statistiche_settimanali_button" />
