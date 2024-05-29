@@ -1,20 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- themes.xml -->
 <resources>
-    <!-- Base application theme -->
-    <style name="Theme.Live" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
+    <style name="Theme.Live" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/logo_blue</item>
         <item name="colorPrimaryVariant">@color/logo_red</item>
         <item name="colorOnPrimary">@color/logo_teal</item>
+        <item name="android:windowFullscreen">true</item>
     </style>
 
-    <!-- TextView theme -->
     <style name="TextViewStyle" parent="Widget.MaterialComponents.TextView">
         <item name="android:textColor">@color/logo_teal</item>
     </style>
 
-    <!-- EditText theme (also used for Button) -->
     <style name="EditTextStyle" parent="Widget.AppCompat.EditText">
         <item name="android:background">@color/logo_teal</item>
         <item name="android:textColor">@color/black</item>
