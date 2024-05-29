@@ -50,10 +50,11 @@
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editTextText5"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintVertical_bias="0.0"/>
 
     <Button
         android:id="@+id/button"
+        style="@style/EditTextStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
@@ -63,16 +64,18 @@
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editTextText6"
-        app:layout_constraintVertical_bias="0.332" />
+        app:layout_constraintVertical_bias="0.144" />
 
     <TextView
         android:id="@+id/textView2"
-        style = "@style/TextViewStyle"
+        style="@style/TextViewStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Hai già un account? Accedi qui!"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button" />
+        app:layout_constraintTop_toBottomOf="@+id/button"
+        app:layout_constraintVertical_bias="0.905" />
 </androidx.constraintlayout.widget.ConstraintLayout>
