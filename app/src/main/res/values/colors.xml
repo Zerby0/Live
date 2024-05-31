@@ -14,4 +14,7 @@
     <color name="logo_blue">#054A91</color>
     <color name="logo_teal">#1EFFBC </color>
     <color name="logo_red">#F71735</color>
+    <color name="color_icon_active">#FF0000</color>
+    <color name="color_icon_inactive">#0000FF</color>
+
 </resources>

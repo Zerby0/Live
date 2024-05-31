@@ -18,22 +18,23 @@ import android.content.IntentFilter
 import android.content.SharedPreferences
 import android.widget.TextView
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.setupWithNavController
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MainActivity : AppCompatActivity() {
 
     private val REQUEST_CODE = 100
     private lateinit var sharedPreferences: SharedPreferences
-    private lateinit var stepCountTextView: TextView
-    private lateinit var calorieCountTextView: TextView
+    var stepCount: Int = 0
+    var calorieCount: Double = 0.0
 
     //Broadcast receiver per i passi contati
     private val stepCountReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
-            val stepCount = intent?.getIntExtra("stepCount", 0) ?: 0
-            val caloriesCount = intent?.getDoubleExtra("calorieCount", 0.0) ?: 0.0
+            stepCount = intent?.getIntExtra("stepCount", 0) ?: 0
+            calorieCount = intent?.getDoubleExtra("calorieCount", 0.0) ?: 0.0
             Log.d("MainActivity", "Received step count: $stepCount")
-            stepCountTextView.text = "Steps: $stepCount"
-            calorieCountTextView.text = "Calories: ${caloriesCount.toInt()}"
         }
     }
 
@@ -44,27 +45,19 @@ class MainActivity : AppCompatActivity() {
         Log.v(ContentValues.TAG, "Si sta avviando l'app")
         val userData: MutableMap<String, String> = HashMap()
 
+        //Per LogRocket
         userData["name"] = "Andrea"
         userData["email"] = "AndreaPadovan@gmail.com"
         userData["subscriptionPlan"] = "premium"
-
         SDK.identify("28dvm2jfa", userData)
         Log.v(ContentValues.TAG, "Identity funziona")
 
-        val statistics = findViewById<Button>(R.id.statistiche_settimanali_button)
-        statistics.setOnClickListener {
-            val myIntent = Intent(it.context, StatisticsActivity::class.java)
-            startActivity(myIntent)
-        }
-        val biometrics = findViewById<Button>(R.id.dati_biometrici_button)
-        biometrics.setOnClickListener {
-            val myIntent = Intent(it.context, BiometricsActivity::class.java)
-            startActivity(myIntent)
-        }
-
-        //Variabile da cambiare per conta passi
-        stepCountTextView = findViewById(R.id.passi_text)
-        calorieCountTextView = findViewById(R.id.calorie_bruciate_text)
+        //Per navigation
+        val navHostFragment = supportFragmentManager
+            .findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        val navController = navHostFragment.navController
+        val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
+        bottomNavigationView.setupWithNavController(navController)
 
         //Verifica i permessi a run time in base alla versione Android (dalla <=10 non serve, quindi non controlla)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
@@ -79,17 +72,20 @@ class MainActivity : AppCompatActivity() {
             startStepCounterService()
         }
 
+        // TODO: da rimuovere quando avremo il database
         // Inizializza SharedPreferences
         sharedPreferences = getSharedPreferences("stepCounterPrefs", Context.MODE_PRIVATE)
 
         // Carica il conteggio dei passi salvato e aggiorna la TextView
         val savedStepCount = sharedPreferences.getInt("stepCount", 0)
-        val savedCalorieCount = sharedPreferences.getFloat("calorieCount", 0.0f)
-        stepCountTextView.text = "Steps: $savedStepCount"
-        calorieCountTextView.text = "Calories: ${savedCalorieCount.toInt()}"
+        val savedCalorieCount = sharedPreferences.getFloat("calorieCount", 0.0f).toDouble()
+        stepCount = savedStepCount
+        calorieCount = savedCalorieCount
+
         //Prende i dati broadcast
         LocalBroadcastManager.getInstance(this)
             .registerReceiver(stepCountReceiver, IntentFilter("StepCounterUpdate"))
+
     }
 
     override fun onDestroy() {
