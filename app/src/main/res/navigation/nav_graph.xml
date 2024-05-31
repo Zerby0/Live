@@ -13,12 +13,13 @@
     <fragment
         android:id="@+id/statisticFragment"
         android:name="com.example.live.StatisticsFragment"
-        android:label="Dashboard"
+        android:label="Statistics"
         tools:layout="@layout/fragment_statistic" />
 
     <fragment
         android:id="@+id/biometricFragment"
         android:name="com.example.live.BiometricsFragment"
-        android:label="Notifications"
+        android:label="Biometrics"
         tools:layout="@layout/fragment_biometric" />
+
 </navigation>

@@ -86,13 +86,6 @@ class MainActivity : AppCompatActivity() {
         LocalBroadcastManager.getInstance(this)
             .registerReceiver(stepCountReceiver, IntentFilter("StepCounterUpdate"))
 
-        // Aggiungi il fragment al contenitore
-        if (savedInstanceState == null) {
-            supportFragmentManager.beginTransaction()
-                .replace(R.id.fragment_container, HomeFragment())
-                .addToBackStack(null)
-                .commit()
-        }
     }
 
     override fun onDestroy() {

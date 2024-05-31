@@ -6,17 +6,18 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.example.live.databinding.FragmentHomeBinding
+import com.example.live.databinding.FragmentStatisticBinding
 
 class StatisticsFragment : Fragment() {
 
-    private var _binding: FragmentHomeBinding? = null
+    private var _binding: FragmentStatisticBinding? = null
     private val binding get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        _binding = FragmentHomeBinding.inflate(inflater, container, false)
+        _binding = FragmentStatisticBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -24,7 +25,7 @@ class StatisticsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         // Puoi aggiungere logica per il tuo fragment qui
-        binding.textHome.text = "Welcome to Statistics Fragment"
+        binding.textStatistics.text = "Welcome to Statistics Fragment"
     }
 
     override fun onDestroyView() {

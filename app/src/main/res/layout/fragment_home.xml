@@ -3,15 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/lite_yellow">
-    <TextView
-        android:id="@+id/text_home"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Home Fragment"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"/>
+
     <TextView
         android:id="@+id/passi_text"
         android:layout_width="wrap_content"

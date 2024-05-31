@@ -5,7 +5,8 @@
     tools:context=".StatisticsFragment">
 
     <TextView
+        android:id="@+id/text_statistics"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Statistic Fragment" />
+        android:text="Statistics Fragment"/>
 </FrameLayout>

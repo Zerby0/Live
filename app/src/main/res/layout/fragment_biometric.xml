@@ -5,7 +5,8 @@
     tools:context=".BiometricsFragment">
 
     <TextView
+        android:id="@+id/text_biometrics"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Biometric Fragment" />
+        android:text="Biometrics Fragment"/>
 </FrameLayout>
