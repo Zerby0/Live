@@ -5,5 +5,12 @@
     <string name="title_activity_sign_in">SignInActivity</string>
     <string name="step_text">Steps</string>
     <string name="calories_text">Calories</string>
+    <string name="age">Age</string>
+    <string name="f">F</string>
+    <string name="m">M</string>
+    <string name="calcola">Calcola</string>
+    <string name="height_cm">Height (cm)</string>
+    <string name="weight_kg">Weight (kg)</string>
+    <string name="risultati">Risultati</string>
 
 </resources>

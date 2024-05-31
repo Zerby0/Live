@@ -19,7 +19,6 @@
     <fragment
         android:id="@+id/biometricFragment"
         android:name="com.example.live.BiometricsFragment"
-        android:label="Biometrics"
+        android:label="Notifications"
         tools:layout="@layout/fragment_biometric" />
-
 </navigation>
