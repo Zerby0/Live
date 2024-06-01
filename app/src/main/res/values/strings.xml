@@ -12,5 +12,13 @@
     <string name="height_cm">Height (cm)</string>
     <string name="weight_kg">Weight (kg)</string>
     <string name="risultati">Risultati</string>
-
+    <string-array name="laf_values">
+        <item>Sedentario</item>
+        <item>1 volta a settimana</item>
+        <item>2–3 volte a settimana</item>
+        <item>4 volte a settimana</item>
+        <item>tutti i giorni</item>
+    </string-array>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

@@ -32,8 +32,16 @@ class BiometricsFragment : Fragment() {
         val age = binding.editTextText.text.toString().toIntOrNull()
         val height = binding.editTextText2.text.toString().toIntOrNull()
         val weight = binding.editTextText3.text.toString().toIntOrNull()
+        val laf = when (binding.spinnerLAF.selectedItemPosition) {
+            0 -> 1.0
+            1 -> 1.3
+            2 -> 1.4
+            3 -> 1.7
+            4 -> 1.9
+            else -> 1.0
+        }
 
-        if (age == null || height == null || weight == null) {
+        if (age == null || height == null || weight == null || sex.isEmpty() || age > 130 || height > 250 || weight > 500) {
             binding.tvResults.text = "Per favore, inserisci tutti i campi correttamente."
             return
         }
@@ -44,7 +52,7 @@ class BiometricsFragment : Fragment() {
         } else {
             447.593 + (9.247 * weight) + (3.098 * height) - (4.330 * age)
         }
-        val tdee = bmr * 1.55  // assuming moderate activity level
+        val tdee = bmr * laf
 
         val bodyFatPercentage = if (sex == "M") {
             1.20 * bmi + 0.23 * age - 16.2
@@ -60,11 +68,10 @@ class BiometricsFragment : Fragment() {
             Massa Grassa: ${String.format("%.2f", fatMass)} kg
             Fabbisogno Energetico: ${String.format("%.2f", tdee)} kcal
         """.trimIndent()
+
     }
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
-
-
 }
