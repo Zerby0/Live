@@ -2,6 +2,7 @@ package com.example.live
 
 import android.content.ContentValues
 import android.os.Bundle
+import com.google.firebase.analytics.FirebaseAnalytics
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.logrocket.core.SDK
@@ -22,9 +23,11 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager
 class MainActivity : AppCompatActivity() {
 
     private val REQUEST_CODE = 100
+    private var start : Long = 0
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var stepCountTextView: TextView
     private lateinit var calorieCountTextView: TextView
+    private lateinit var fbAnalytics: FirebaseAnalytics
 
     //Broadcast receiver per i passi contati
     private val stepCountReceiver = object : BroadcastReceiver() {
@@ -40,6 +43,15 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        // Avvia FireBase Analytics per la telemetria
+        fbAnalytics = FirebaseAnalytics.getInstance(this)
+        // Registra tempo di avvio della sessione
+        start = System.currentTimeMillis()
+        val startBundle = Bundle().apply {
+            putLong("start_time", start)
+        }
+        fbAnalytics.logEvent("session_started", startBundle)
 
         Log.v(ContentValues.TAG, "Si sta avviando l'app")
         val userData: MutableMap<String, String> = HashMap()
@@ -90,6 +102,19 @@ class MainActivity : AppCompatActivity() {
         //Prende i dati broadcast
         LocalBroadcastManager.getInstance(this)
             .registerReceiver(stepCountReceiver, IntentFilter("StepCounterUpdate"))
+    }
+
+    override fun onStop() {
+        super.onStop()
+
+        // Registra tempo di fine sessione
+        val stop = System.currentTimeMillis()
+        val sessionTime = stop - start
+        val endBundle = Bundle().apply{
+            putLong("session_length", sessionTime)
+        }
+        fbAnalytics.logEvent("session_end", endBundle)
+
     }
 
     override fun onDestroy() {

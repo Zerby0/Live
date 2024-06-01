@@ -6,17 +6,20 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
 import com.example.live.databinding.ActivitySignInBinding
+import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.auth.FirebaseAuth
 
 class SignInActivity : AppCompatActivity() {
 
     private lateinit var fbAuth: FirebaseAuth
+    private lateinit var fbAnalytics: FirebaseAnalytics
     private lateinit var binding: ActivitySignInBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         fbAuth = FirebaseAuth.getInstance()
+        fbAnalytics = FirebaseAnalytics.getInstance(this)
 
         binding = ActivitySignInBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -27,10 +30,20 @@ class SignInActivity : AppCompatActivity() {
         val loggedPw = sharedPref.getString("pw", null)
 
         if (loggedUser != null && loggedPw != null) {
-            fbAuth.signInWithEmailAndPassword(loggedUser, loggedPw)
-            val intent = Intent(this, MainActivity::class.java)
-            startActivity(intent)
-            finish()
+            fbAuth.signInWithEmailAndPassword(loggedUser, loggedPw).addOnCompleteListener {
+                if (it.isSuccessful) {
+                    // Send user data to Firebase
+                    val userData = collectUserData()
+                    fbAnalytics.logEvent(FirebaseAnalytics.Event.LOGIN, userData)
+                    // Send user to Main Activity
+                    val intent = Intent(this, MainActivity::class.java)
+                    startActivity(intent)
+                    finish()
+                } else {
+                    Toast.makeText(this, "Login automatico fallito.", Toast.LENGTH_LONG).show()
+                }
+            }
+
         }
 
         // Send user to sign-up if not registered
@@ -57,7 +70,9 @@ class SignInActivity : AppCompatActivity() {
                         edit.putString("pw", pw)
                         // Close editor
                         edit.apply()
-
+                        // Send user data to Firebase
+                        val userData = collectUserData()
+                        fbAnalytics.logEvent(FirebaseAnalytics.Event.LOGIN, userData)
                         // Move user to Main Activity
                         val intent = Intent(this, MainActivity::class.java)
                         startActivity(intent)
@@ -70,5 +85,23 @@ class SignInActivity : AppCompatActivity() {
             }
         }
     }
+
+    private fun collectUserData() : Bundle {
+        val dataBundle = Bundle()
+        // Device info
+        dataBundle.apply {
+            putLong("time", System.currentTimeMillis())
+            putString("device", android.os.Build.DEVICE)
+            putString("model", android.os.Build.MODEL)
+            putString("brand", android.os.Build.BRAND)
+            putString("manufacturer", android.os.Build.MANUFACTURER)
+            putString("hardware", android.os.Build.HARDWARE)
+            putString("deviceOS", android.os.Build.VERSION.RELEASE)
+        }
+
+        return dataBundle
+    }
+
+
 
 }
