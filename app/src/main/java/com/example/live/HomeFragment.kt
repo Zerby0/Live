@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.example.live.databinding.FragmentHomeBinding
+import kotlin.math.round
 
 class HomeFragment : Fragment() {
 
@@ -27,7 +28,7 @@ class HomeFragment : Fragment() {
         // Recupera i dati dall'attività
         val activity = activity as MainActivity
         val stepCount = activity.stepCount
-        val calorieCount = activity.calorieCount
+        val calorieCount = round(activity.calorieCount)
 
         // Imposta i dati nei TextView utilizzando il binding
         binding.passiText.text = "Steps: $stepCount"

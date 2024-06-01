@@ -8,7 +8,9 @@ plugins {
 android {
     namespace 'com.example.live'
     compileSdk 34
-
+    viewBinding {
+        enabled = true
+    }
     defaultConfig {
         applicationId "com.example.live"
         minSdk 26
@@ -38,6 +40,14 @@ android {
     buildFeatures {
         compose true
         viewBinding = true
+    }
+    buildscript {
+        repositories {
+            google()
+        }
+        dependencies {
+            classpath("androidx.navigation:navigation-safe-args-gradle-plugin:2.7.7")
+        }
     }
     composeOptions {
         kotlinCompilerExtensionVersion '1.5.1'
@@ -82,5 +92,4 @@ dependencies {
     implementation 'androidx.navigation:navigation-fragment-ktx:2.7.7'
     implementation 'androidx.navigation:navigation-ui-ktx:2.7.7'
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.1"
-
 }

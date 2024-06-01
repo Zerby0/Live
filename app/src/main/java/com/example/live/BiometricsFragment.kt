@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.example.live.databinding.FragmentBiometricBinding
+import com.example.live.databinding.FragmentSuggestionsBinding
 
 class BiometricsFragment : Fragment() {
 
@@ -69,7 +70,31 @@ class BiometricsFragment : Fragment() {
             Fabbisogno Energetico: ${String.format("%.2f", tdee)} kcal
         """.trimIndent()
 
+        showDetailsScreen(bmi)
     }
+
+    private fun showDetailsScreen(bmi : Double) {
+
+        binding.fragmentContainer.removeAllViews()
+
+        val suggestionsBinding = FragmentSuggestionsBinding.inflate(layoutInflater)
+
+        val imageResource = when {
+            bmi < 18.5 -> R.drawable.skinny
+            bmi < 25 -> R.drawable.normal
+            else -> R.drawable.overweight
+        }
+        suggestionsBinding.imageViewSuggestions.setImageResource(imageResource)
+        suggestionsBinding.textViewSuggestions.text = when {
+            bmi < 18.5 -> "Sei sottopeso. Dovresti aumentare il tuo apporto calorico."
+            bmi < 25 -> "Il tuo peso è nella norma. Continua così!"
+            else -> "Sei sovrappeso. Dovresti ridurre il tuo apporto calorico."
+        }
+
+        // Visualizzazione del messaggio
+        binding.fragmentContainer.addView(suggestionsBinding.root)
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null

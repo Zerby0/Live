@@ -6,7 +6,6 @@ import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.logrocket.core.SDK
 import android.content.Intent
-import android.widget.Button
 import android.Manifest
 import android.content.BroadcastReceiver
 import android.content.pm.PackageManager
@@ -16,7 +15,6 @@ import androidx.core.content.ContextCompat
 import android.content.Context
 import android.content.IntentFilter
 import android.content.SharedPreferences
-import android.widget.TextView
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
