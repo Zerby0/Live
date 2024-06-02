@@ -12,11 +12,17 @@ import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
-import android.os.Build
 import android.os.IBinder
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import kotlinx.coroutines.CoroutineScope
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class StepCounterService : Service(), SensorEventListener {
 
@@ -27,6 +33,7 @@ class StepCounterService : Service(), SensorEventListener {
     private var initialStepCount = -1
     private val caloriesPerStep  = 0.04
     private lateinit var sharedPreferences: SharedPreferences
+    private val currentDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
 
     override fun onCreate() {
         super.onCreate()
@@ -39,6 +46,10 @@ class StepCounterService : Service(), SensorEventListener {
 
         // Avvia il servizio in foreground
         startForegroundService()
+
+        // Inizializzazione del database e del DAO
+        val liveDatabase = LiveDatabaseInitializer.getInstance()
+        val stepCountDao = liveDatabase.stepCountDao()
 
         // Inizializza SharedPreferences
         sharedPreferences = getSharedPreferences("stepCounterPrefs", Context.MODE_PRIVATE)
@@ -107,6 +118,17 @@ class StepCounterService : Service(), SensorEventListener {
             intent.putExtra("stepCount", stepCount)
             intent.putExtra("calorieCount", calorieCount)
             LocalBroadcastManager.getInstance(this).sendBroadcast(intent)
+
+            //Invia i dati al database
+            // Invio dei dati al database
+            val liveDatabase = LiveDatabaseInitializer.getInstance()
+            val stepCountDao = liveDatabase.stepCountDao()
+            val stepCountObj = StepCount(date = currentDate, count = stepCount)
+
+            // Avvio di una coroutine per inserire i dati nel database
+            CoroutineScope(Dispatchers.IO).launch {
+                stepCountDao.insert(stepCountObj)
+            }
         }
     }
 
