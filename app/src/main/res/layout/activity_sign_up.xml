@@ -74,7 +74,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
         android:background="@drawable/rounded_edit_text"
-        android:drawableStart="@drawable/baseline_lock_open_24"
+        android:drawableStart="@drawable/baseline_lock_outline_24"
         android:drawablePadding="16dp"
         android:drawableTint="#FDE0B5"
         android:ems="10"
