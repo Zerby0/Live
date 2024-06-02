@@ -19,6 +19,7 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.firebase.database.FirebaseDatabase
 
 class MainActivity : AppCompatActivity(), StepCountListener {
 
@@ -56,6 +57,11 @@ class MainActivity : AppCompatActivity(), StepCountListener {
         userData["subscriptionPlan"] = "premium"
         SDK.identify("28dvm2jfa", userData)
         Log.v(ContentValues.TAG, "Identity funziona")
+
+        // Inizializza Firebase
+        FirebaseDatabase.getInstance().setPersistenceEnabled(true)
+        // Inizializza il database Room
+        LiveDatabaseInitializer.init(this)
 
         //Per navigation
         val navHostFragment = supportFragmentManager
