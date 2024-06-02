@@ -11,7 +11,9 @@ object LiveDatabaseInitializer {
             context.applicationContext,
             LiveDatabase::class.java,
             "my_database"
-        ).build()
+        )
+            .fallbackToDestructiveMigration()
+            .build()
     }
 
     fun getInstance(): LiveDatabase {

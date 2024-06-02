@@ -29,10 +29,7 @@ class StepCounterService : Service(), SensorEventListener {
     private lateinit var sensorManager: SensorManager
     private var stepCounterSensor: Sensor? = null
     private var stepCount = 0
-    private var calorieCount = 0.0
     private var initialStepCount = -1
-    private val caloriesPerStep  = 0.04
-    private lateinit var sharedPreferences: SharedPreferences
     private val currentDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
 
     override fun onCreate() {
@@ -46,14 +43,6 @@ class StepCounterService : Service(), SensorEventListener {
 
         // Avvia il servizio in foreground
         startForegroundService()
-
-        // Inizializzazione del database e del DAO
-        val liveDatabase = LiveDatabaseInitializer.getInstance()
-        val stepCountDao = liveDatabase.stepCountDao()
-
-        // Inizializza SharedPreferences
-        sharedPreferences = getSharedPreferences("stepCounterPrefs", Context.MODE_PRIVATE)
-        stepCount = sharedPreferences.getInt("stepCount", 0)
 
         // Registra il listener per il sensore di contapassi se il sensore è disponibile
         if (stepCounterSensor != null) {
@@ -104,26 +93,11 @@ class StepCounterService : Service(), SensorEventListener {
                 initialStepCount = totalStepCount
             }
             stepCount = totalStepCount - initialStepCount
-            calorieCount = stepCount * caloriesPerStep
-            Log.d("StepCounterService", "Conteggio passi: $stepCount")
 
-            // Salva il conteggio dei passi in SharedPreferences
-            val editor = sharedPreferences.edit()
-            editor.putInt("stepCount", stepCount)
-            editor.putFloat("calorieCount", calorieCount.toFloat())
-            editor.apply()
-
-            // Invia i dati tramite broadcast locale
-            val intent = Intent("StepCounterUpdate")
-            intent.putExtra("stepCount", stepCount)
-            intent.putExtra("calorieCount", calorieCount)
-            LocalBroadcastManager.getInstance(this).sendBroadcast(intent)
-
-            //Invia i dati al database
             // Invio dei dati al database
             val liveDatabase = LiveDatabaseInitializer.getInstance()
             val stepCountDao = liveDatabase.stepCountDao()
-            val stepCountObj = StepCount(date = currentDate, count = stepCount)
+            val stepCountObj = StepCount(date = currentDate, steps = stepCount)
 
             // Avvio di una coroutine per inserire i dati nel database
             CoroutineScope(Dispatchers.IO).launch {

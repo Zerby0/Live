@@ -1,5 +1,6 @@
 package com.example.live
 
+import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
@@ -12,5 +13,5 @@ interface StepCountDao {
 
     // Recupera i passi giornalieri per una data specifica
     @Query("SELECT * FROM step_count WHERE date = :date")
-    suspend fun getStepCountForDate(date: String): StepCount?
+    fun getStepCountForDate(date: String): LiveData<StepCount>?
 }
