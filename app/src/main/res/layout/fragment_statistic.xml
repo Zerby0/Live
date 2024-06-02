@@ -5,15 +5,19 @@
     android:layout_height="match_parent"
     tools:context=".StatisticsFragment">
 
-    <TextView
-        android:id="@+id/text_statistics"
+    <Button
+        android:id="@+id/btnAchievement"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Statistics Fragment"
-        android:textSize="18sp"
-        android:layout_margin="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/rounded_button"
+        android:text="@string/quest"
+        android:textColor="@color/white"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintHorizontal_bias="1.0" />
 
     <TextView
         android:id="@+id/textView"

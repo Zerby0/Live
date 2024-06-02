@@ -29,7 +29,6 @@ class HomeFragment : Fragment() {
         val activity = activity as MainActivity
         val stepCount = activity.stepCount
         val calorieCount = round(activity.calorieCount)
-
         // Imposta i dati nei TextView utilizzando il binding
         binding.passiText.text = "Steps: $stepCount"
         binding.calorieBruciateText.text = "Calories: $calorieCount"

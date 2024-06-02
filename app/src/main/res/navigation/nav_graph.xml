@@ -14,7 +14,23 @@
         android:id="@+id/statisticFragment"
         android:name="com.example.live.StatisticsFragment"
         android:label="Statistics"
-        tools:layout="@layout/fragment_statistic" />
+        tools:layout="@layout/fragment_statistic" >
+        <action
+            android:id="@+id/action_statistic_to_achievement"
+            app:destination="@id/itemListFragment"
+            app:popUpTo="@id/statisticFragment"
+            app:popUpToInclusive="false"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/itemListFragment"
+        android:name="com.example.live.ItemListFragment"
+        android:label="Notifications"
+        tools:layout="@layout/fragment_item_list" >
+        <action
+            android:id="@+id/action_itemListFragment_to_statisticFragment"
+            app:destination="@id/statisticFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/biometricFragment"

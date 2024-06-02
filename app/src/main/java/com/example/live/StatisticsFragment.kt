@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.example.live.databinding.FragmentHomeBinding
 import com.example.live.databinding.FragmentStatisticBinding
 
@@ -24,8 +25,10 @@ class StatisticsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Puoi aggiungere logica per il tuo fragment qui
-        binding.textStatistics.text = "Welcome to Statistics Fragment"
+        binding.btnAchievement.setOnClickListener {
+            findNavController().navigate(R.id.action_statistic_to_achievement)
+        }
+
     }
 
     override fun onDestroyView() {
