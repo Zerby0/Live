@@ -33,14 +33,15 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Recupera il traguardo salvato
-        val sharedPreferences = requireActivity().getPreferences(Context.MODE_PRIVATE)
-        stepGoal = sharedPreferences.getInt("stepGoal", 10000)
-
         // Recupera i dati dall'attività
         val activity = activity as MainActivity
         val stepCount = activity.stepCount
         val calorieCount = round(activity.calorieCount)
+
+        // Recupera il traguardo salvato
+        val sharedPreferences = requireActivity().getPreferences(Context.MODE_PRIVATE)
+        stepGoal = sharedPreferences.getInt("stepGoal", 10000)
+
 
         binding.passiText.text = "Steps: $stepCount"
         binding.calorieBruciateText.text = "Calories: $calorieCount"
