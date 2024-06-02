@@ -122,7 +122,6 @@
             return dataBundle
         }
 
-
         private fun getLocation(fusedLocProvClient: FusedLocationProviderClient) : String {
             var pos = ""
             // Controlla permessi posizione
@@ -144,6 +143,5 @@
             }
             return pos
         }
-
 
     }

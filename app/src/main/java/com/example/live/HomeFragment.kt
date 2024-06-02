@@ -6,12 +6,16 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.example.live.databinding.FragmentHomeBinding
+import com.google.firebase.analytics.FirebaseAnalytics
 import kotlin.math.round
 
 class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
+    // Firebase
+    private lateinit var fbAnalytics: FirebaseAnalytics
+    private var startTime : Long = 0
 
 
     override fun onCreateView(
@@ -30,6 +34,9 @@ class HomeFragment : Fragment() {
         val stepCount = activity.stepCount
         val calorieCount = round(activity.calorieCount)
 
+        // Inizializza Firebase Analytics
+        fbAnalytics = FirebaseAnalytics.getInstance(requireContext())
+
         // Imposta i dati nei TextView utilizzando il binding
         binding.passiText.text = "Steps: $stepCount"
         binding.calorieBruciateText.text = "Calories: $calorieCount"
@@ -39,4 +46,23 @@ class HomeFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
+
+    override fun onResume() {
+        super.onResume()
+        startTime = System.currentTimeMillis()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        val timeSpent = System.currentTimeMillis() - startTime
+        fragmentSwitchLog(timeSpent)
+    }
+    private fun fragmentSwitchLog(time: Long) {
+        val bundle = Bundle().apply {
+            putString("fragment", "HomeFragment")
+            putLong("time", time)
+        }
+        fbAnalytics.logEvent    ("fragment_switch_main_activity", bundle)
+    }
+
 }
