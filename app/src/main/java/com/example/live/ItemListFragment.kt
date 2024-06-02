@@ -32,11 +32,13 @@ class ItemListFragment : Fragment() {
         // Trova il RecyclerView nel layout
         recyclerView = view.findViewById(R.id.recyclerView)
 
+        //TODO dopo i test rimuovi i ture dagli achievements
+
         // Inizializza i dati (in un'app reale, questi potrebbero venire da un database o un'API)
         val achievements = listOf(
-            Achievement("Primo Passo", "Completa 1.000 passi in un giorno."),
-            Achievement("Piccolo Camminatore", "Completa 5.000 passi in un giorno."),
-            Achievement("Costanza Iniziale", "Completa 5.000 passi al giorno per 3 giorni consecutivi."),
+            Achievement("Primo Passo", "Completa 1.000 passi in un giorno.", true),
+            Achievement("Piccolo Camminatore", "Completa 5.000 passi in un giorno.", true),
+            Achievement("Costanza Iniziale", "Completa 5.000 passi al giorno per 3 giorni consecutivi.", true),
             Achievement("Camminatore Quotidiano", "Completa 10.000 passi in un giorno."),
             Achievement("Semplicemente Passeggiando", "Completa 50.000 passi in una settimana."),
             Achievement("Caminatore Determinato", "Completa 10.000 passi al giorno per 7 giorni consecutivi."),

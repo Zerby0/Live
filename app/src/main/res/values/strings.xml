@@ -12,6 +12,8 @@
     <string name="height_cm">Height (cm)</string>
     <string name="weight_kg">Weight (kg)</string>
     <string name="risultati">Risultati</string>
+    <string name="achievement_completed">Achievement completed</string>
+    <string name="achievement_not_completed">Achievement not completed</string>
     <string-array name="laf_values">
         <item>Sedentario</item>
         <item>1 volta a settimana</item>
