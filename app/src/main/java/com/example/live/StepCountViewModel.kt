@@ -13,7 +13,8 @@ import java.util.Locale
 
 class StepCountViewModel(private val stepCountDao: StepCountDao) : ViewModel() {
 
-
+    private val currentDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
+    val dailyStepCountLiveData: LiveData<StepCount>? = stepCountDao.getStepCountForDate(currentDate)
     private val _achievements = MutableLiveData<List<Achievement>>()
     val achievements: LiveData<List<Achievement>> get() = _achievements
 

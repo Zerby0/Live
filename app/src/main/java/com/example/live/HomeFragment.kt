@@ -42,17 +42,17 @@ class HomeFragment : Fragment() {
 
         val view = binding.root
 
+
+
         val stepCountDao = LiveDatabaseInitializer.getInstance(requireContext()).stepCountDao()
         val viewModelFactory = StepCountViewModelFactory(stepCountDao)
         stepCountViewModel = ViewModelProvider(this, viewModelFactory)[StepCountViewModel::class.java]
 
-        // Esegui una coroutine per ottenere il conteggio dei passi
-        viewLifecycleOwner.lifecycleScope.launch {
-            val stepCount = withContext(Dispatchers.IO) {
-                stepCountViewModel.getStepCountForDateSync(currentDate)
-            }
+        // Osserva il LiveData per il conteggio dei passi giornalieri
+        stepCountViewModel.dailyStepCountLiveData?.observe(viewLifecycleOwner) { stepCount ->
             stepCount?.let {
-                updateStepCount(it.steps, it.calories)
+                // Aggiorna l'UI con il nuovo conteggio dei passi giornalieri
+                updateStepCount(stepCount.steps, stepCount.calories)
             }
         }
 
