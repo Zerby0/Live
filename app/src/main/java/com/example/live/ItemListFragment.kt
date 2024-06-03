@@ -37,26 +37,15 @@ class ItemListFragment : Fragment() {
         _binding = FragmentItemListBinding.inflate(inflater, container, false)
 
 
-        val stepCountDao = LiveDatabaseInitializer.getInstance(requireContext()).stepCountDao()
+       /*val stepCountDao = LiveDatabaseInitializer.getInstance(requireContext()).stepCountDao()
         val viewModelFactory = StepCountViewModelFactory(stepCountDao)
-        stepCountViewModel = ViewModelProvider(this, viewModelFactory).get(StepCountViewModel::class.java)
+        stepCountViewModel = ViewModelProvider(this, viewModelFactory).get(StepCountViewModel::class.java)*/
 
-        stepCountViewModel.achievements.observe(viewLifecycleOwner) { achievements ->
+        /*stepCountViewModel.achievements.observe(viewLifecycleOwner) { achievements ->
             // Aggiorna il tuo RecyclerView con la lista di achievements
             updateRecyclerView(achievements)
-        }
+        }*/
 
-        // Esegui una coroutine per caricare i dati iniziali
-        viewLifecycleOwner.lifecycleScope.launch {
-            val stepCount = withContext(Dispatchers.IO) {
-                stepCountViewModel.getStepCountForDateSync(currentDate)
-            }
-            val totalSteps = stepCountViewModel.getTotalSteps()
-            val consecutiveDays = stepCountViewModel.getConsecutiveDaysCount("2024-06-03", currentDate)
-            stepCount?.let {
-                stepCountViewModel.updateAchievements(it.steps, totalSteps, consecutiveDays)
-            }
-        }
 
         // Configura l'adapter
         achievementsAdapter = AchievementAdapter(emptyList())
@@ -64,9 +53,9 @@ class ItemListFragment : Fragment() {
         binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
         // Osserva i cambiamenti negli achievements
-        stepCountViewModel.achievements.observe(viewLifecycleOwner) { achievements ->
+        /*stepCountViewModel.achievements.observe(viewLifecycleOwner) { achievements ->
             achievementsAdapter.updateAchievements(achievements)
-        }
+        }*/
         return binding.root
     }
 

@@ -1,23 +1,26 @@
 package com.example.live
 
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
+import android.util.Log
+import androidx.lifecycle.LiveData
 
 class StepCountRepository(private val stepCountDao: StepCountDao) {
+    fun getStepCountForDate(date: String): LiveData<StepCount>? {
+        return stepCountDao.getStepCountForDate(date)
+    }
 
-    private val firebaseDatabase: DatabaseReference = FirebaseDatabase.getInstance().reference
+    fun getAllStepCounts(): LiveData<List<StepCount>> {
+        return stepCountDao.getAllStepCounts()
+    }
 
-    suspend fun uploadAllStepCounts() {
-        withContext(Dispatchers.IO) {
-            val stepCounts = stepCountDao.getAllStepCounts()
-            for (stepCount in stepCounts) {
-                val key = firebaseDatabase.child("step_counts").push().key
-                if (key != null) {
-                    firebaseDatabase.child("step_counts").child(key).setValue(stepCount)
-                }
-            }
-        }
+    fun getTotalSteps(): LiveData<Int?> {
+        return stepCountDao.getTotalSteps()
+    }
+
+    fun getDaysWithMinimumSteps(): LiveData<List<String>> {
+        return stepCountDao.getDaysWithMinimumSteps()
+    }
+
+    suspend fun insert(stepCount: StepCount) {
+        stepCountDao.insert(stepCount)
     }
 }

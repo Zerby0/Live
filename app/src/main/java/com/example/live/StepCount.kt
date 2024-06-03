@@ -7,7 +7,7 @@ import kotlin.math.round
 @Entity(tableName = "step_count")
 data class StepCount(
     @PrimaryKey val date: String,
-    val steps: Int,
+    var steps: Int,
     val calories: Double = calculateCalories(steps)
 ) {
     companion object {

@@ -43,8 +43,5 @@
             android:name=".MainActivity"
             android:exported="false"
             android:theme="@style/Theme.Live" />
-
-        <activity android:name=".StatisticsActivity"> </activity>
-        <activity android:name=".BiometricsActivity"> </activity>
     </application>
 </manifest>

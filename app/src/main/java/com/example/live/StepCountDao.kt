@@ -1,5 +1,7 @@
 package com.example.live
 
+import android.content.ContentValues
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
@@ -12,19 +14,14 @@ interface StepCountDao {
     suspend fun insert(stepCount: StepCount)
 
     @Query("SELECT * FROM step_count WHERE date = :date")
-    suspend fun getStepCountForDateSync(date: String): StepCount?
-
-    @Query("SELECT * FROM step_count WHERE date = :date")
     fun getStepCountForDate(date: String): LiveData<StepCount>?
 
     @Query("SELECT * FROM step_count")
-    suspend fun getAllStepCounts(): List<StepCount>
+    fun getAllStepCounts(): LiveData<List<StepCount>>
 
-    // Tutti i passi
     @Query("SELECT SUM(steps) FROM step_count")
-    suspend fun getTotalSteps(): Int?
+    fun getTotalSteps(): LiveData<Int?>
 
-    // Giorni di fila con più di 10000 passi
     @Query("SELECT date FROM step_count WHERE steps >= 10000 ORDER BY date ASC")
-    suspend fun getDaysWithMinimumSteps(): List<String>
+    fun getDaysWithMinimumSteps(): LiveData<List<String>>
 }

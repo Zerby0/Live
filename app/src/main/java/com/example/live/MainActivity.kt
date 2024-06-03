@@ -19,6 +19,7 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.firebase.FirebaseApp
 import com.google.firebase.database.FirebaseDatabase
 
 class MainActivity : AppCompatActivity() {
@@ -28,22 +29,6 @@ class MainActivity : AppCompatActivity() {
     var stepCount: Int = 0
     var calorieCount: Double = 0.0
 
-    //Broadcast receiver per i passi contati
-    private val stepCountReceiver = object : BroadcastReceiver() {
-        override fun onReceive(context: Context?, intent: Intent?) {
-            stepCount = intent?.getIntExtra("stepCount", 0) ?: 0
-            calorieCount = intent?.getDoubleExtra("calorieCount", 0.0) ?: 0.0
-            Log.d("MainActivity", "Received step count: $stepCount")
-
-            //Invia i dati al fragment
-            val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
-            val fragment = navHostFragment.childFragmentManager.primaryNavigationFragment
-            if (fragment is HomeFragment) {
-                fragment.updateStepCount(stepCount, calorieCount)
-            }
-        }
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -51,7 +36,7 @@ class MainActivity : AppCompatActivity() {
         Log.v(ContentValues.TAG, "Si sta avviando l'app")
         val userData: MutableMap<String, String> = HashMap()
 
-        //Per LogRocket
+        // Per LogRocket
         userData["name"] = "Andrea"
         userData["email"] = "AndreaPadovan@gmail.com"
         userData["subscriptionPlan"] = "premium"
@@ -61,16 +46,16 @@ class MainActivity : AppCompatActivity() {
         // Inizializza Firebase
         FirebaseDatabase.getInstance().setPersistenceEnabled(true)
         // Inizializza il database Room
-        LiveDatabaseInitializer.init(this)
+        LiveDatabase.getDatabase(this)
 
-        //Per navigation
+        // Per navigation
         val navHostFragment = supportFragmentManager
             .findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         val navController = navHostFragment.navController
         val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
         bottomNavigationView.setupWithNavController(navController)
 
-        //Verifica i permessi a run time in base alla versione Android (dalla <=10 non serve, quindi non controlla)
+        // Verifica i permessi a run time in base alla versione Android (dalla <=10 non serve, quindi non controlla)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACTIVITY_RECOGNITION)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -83,7 +68,6 @@ class MainActivity : AppCompatActivity() {
             startStepCounterService()
         }
 
-        // TODO: da rimuovere quando avremo il database
         // Inizializza SharedPreferences
         sharedPreferences = getSharedPreferences("stepCounterPrefs", Context.MODE_PRIVATE)
 
@@ -92,32 +76,17 @@ class MainActivity : AppCompatActivity() {
         val savedCalorieCount = sharedPreferences.getFloat("calorieCount", 0.0f).toDouble()
         stepCount = savedStepCount
         calorieCount = savedCalorieCount
-
-        //Prende i dati broadcast
-        LocalBroadcastManager.getInstance(this)
-            .registerReceiver(stepCountReceiver, IntentFilter("StepCounterUpdate"))
-
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        //Disattiva il BroadcastReceiver
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(stepCountReceiver)
     }
 
-    //Starta il servizio
     private fun startStepCounterService() {
         val intent = Intent(this, StepCounterService::class.java)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            startForegroundService(intent)
-        } else {
-            startService(intent)
-        }
+        startForegroundService(intent)
     }
 
-    //Controlla se la richiesta di permessi è stata effettuata per il codice ACTIVITY_RECOGNITION_REQUEST_CODE,
-    //Se la richiesta di permessi ha avuto successo (cioè grantResults[0] è uguale a PackageManager.PERMISSION_GRANTED),
-    //allora il servizio di conteggio dei passi viene avviato mediante la chiamata a startStepCounterService()
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == REQUEST_CODE) {
@@ -127,4 +96,3 @@ class MainActivity : AppCompatActivity() {
         }
     }
 }
-

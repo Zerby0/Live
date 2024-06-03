@@ -5,6 +5,7 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.app.Service
+import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
@@ -94,14 +95,20 @@ class StepCounterService : Service(), SensorEventListener {
             }
             stepCount = totalStepCount - initialStepCount
 
-            // Invio dei dati al database
-            val liveDatabase = LiveDatabaseInitializer.getInstance(this)
+            val liveDatabase = LiveDatabase.getDatabase(this)
             val stepCountDao = liveDatabase.stepCountDao()
-            val stepCountObj = StepCount(date = currentDate, steps = stepCount)
 
-            // Avvio di una coroutine per inserire i dati nel database
+            // Avvio di una coroutine per inserire o aggiornare i dati nel database
             CoroutineScope(Dispatchers.IO).launch {
-                stepCountDao.insert(stepCountObj)
+                val existingStepCountLiveData = stepCountDao.getStepCountForDate(currentDate)
+                val existingStepCount = existingStepCountLiveData?.value
+                if (existingStepCount != null) {
+                    existingStepCount.steps += stepCount
+                    stepCountDao.insert(existingStepCount)
+                } else {
+                    val stepCountObj = StepCount(date = currentDate, steps = stepCount)
+                    stepCountDao.insert(stepCountObj)
+                }
             }
         }
     }

@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "7358c97c338d7725bd11726df05178c7",
+    "identityHash": "afc9c3da87db7059f34b3eb48efe57ab",
     "entities": [
       {
         "tableName": "step_count",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`date` TEXT NOT NULL, `count` INTEGER NOT NULL, `caloriesBurned` REAL NOT NULL, PRIMARY KEY(`date`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`date` TEXT NOT NULL, `steps` INTEGER NOT NULL, `calories` REAL NOT NULL, PRIMARY KEY(`date`))",
         "fields": [
           {
             "fieldPath": "date",
@@ -15,14 +15,14 @@
             "notNull": true
           },
           {
-            "fieldPath": "count",
-            "columnName": "count",
+            "fieldPath": "steps",
+            "columnName": "steps",
             "affinity": "INTEGER",
             "notNull": true
           },
           {
-            "fieldPath": "caloriesBurned",
-            "columnName": "caloriesBurned",
+            "fieldPath": "calories",
+            "columnName": "calories",
             "affinity": "REAL",
             "notNull": true
           }
@@ -40,7 +40,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '7358c97c338d7725bd11726df05178c7')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'afc9c3da87db7059f34b3eb48efe57ab')"
     ]
   }
 }
