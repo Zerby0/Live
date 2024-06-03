@@ -21,7 +21,7 @@ import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.database.FirebaseDatabase
 
-class MainActivity : AppCompatActivity(), StepCountListener {
+class MainActivity : AppCompatActivity() {
 
     private val REQUEST_CODE = 100
     private lateinit var sharedPreferences: SharedPreferences
@@ -124,14 +124,6 @@ class MainActivity : AppCompatActivity(), StepCountListener {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 startStepCounterService()
             }
-        }
-    }
-    override fun onStepCountChanged(stepCount: Int, calorieCount: Double) {
-        // Invia i dati al fragment
-        val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
-        val fragment = navHostFragment.childFragmentManager.primaryNavigationFragment
-        if (fragment is HomeFragment) {
-            fragment.updateStepCount(stepCount, calorieCount)
         }
     }
 }

@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import com.example.live.databinding.FragmentHomeBinding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -39,23 +40,28 @@ class HomeFragment : Fragment() {
     ): View? {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
 
+        val view = binding.root
 
-        val stepCountDao = LiveDatabaseInitializer.getInstance().stepCountDao()
+        val stepCountDao = LiveDatabaseInitializer.getInstance(requireContext()).stepCountDao()
         val viewModelFactory = StepCountViewModelFactory(stepCountDao)
-        stepCountViewModel = ViewModelProvider(this, viewModelFactory).get(StepCountViewModel::class.java)
+        stepCountViewModel = ViewModelProvider(this, viewModelFactory)[StepCountViewModel::class.java]
 
-        CoroutineScope(Dispatchers.Main).launch {
-            val stepCountLiveData = withContext(Dispatchers.IO) {
+        // Esegui una coroutine per ottenere il conteggio dei passi
+        viewLifecycleOwner.lifecycleScope.launch {
+            val stepCount = withContext(Dispatchers.IO) {
                 stepCountViewModel.getStepCountForDateSync(currentDate)
             }
-            // Osserva i dati nel LiveData
-            stepCountLiveData?.observe(viewLifecycleOwner) { stepCount ->
-                stepCount?.let {
-                    updateStepCount(stepCount.steps, stepCount.calories)
-                }
+            stepCount?.let {
+                updateStepCount(it.steps, it.calories)
             }
         }
-        return binding.root
+
+        val repository = StepCountRepository(stepCountDao)
+        viewLifecycleOwner.lifecycleScope.launch {
+            repository.uploadAllStepCounts()
+        }
+
+        return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

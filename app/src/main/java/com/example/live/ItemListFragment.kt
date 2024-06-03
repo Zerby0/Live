@@ -5,17 +5,29 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.live.databinding.FragmentItemListBinding
 import com.example.live.databinding.FragmentStatisticBinding
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 class ItemListFragment : Fragment() {
 
-    private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: AchievementAdapter
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var stepCountViewModel: StepCountViewModel
+    private lateinit var achievementsAdapter: AchievementAdapter
     private var _binding: FragmentItemListBinding? = null
+    private val currentDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
+
     private val binding get() = _binding!!
 
     override fun onCreateView(
@@ -24,6 +36,37 @@ class ItemListFragment : Fragment() {
     ): View? {
         _binding = FragmentItemListBinding.inflate(inflater, container, false)
 
+
+        val stepCountDao = LiveDatabaseInitializer.getInstance(requireContext()).stepCountDao()
+        val viewModelFactory = StepCountViewModelFactory(stepCountDao)
+        stepCountViewModel = ViewModelProvider(this, viewModelFactory).get(StepCountViewModel::class.java)
+
+        stepCountViewModel.achievements.observe(viewLifecycleOwner) { achievements ->
+            // Aggiorna il tuo RecyclerView con la lista di achievements
+            updateRecyclerView(achievements)
+        }
+
+        // Esegui una coroutine per caricare i dati iniziali
+        viewLifecycleOwner.lifecycleScope.launch {
+            val stepCount = withContext(Dispatchers.IO) {
+                stepCountViewModel.getStepCountForDateSync(currentDate)
+            }
+            val totalSteps = stepCountViewModel.getTotalSteps()
+            val consecutiveDays = stepCountViewModel.getConsecutiveDaysCount("2024-06-03", currentDate)
+            stepCount?.let {
+                stepCountViewModel.updateAchievements(it.steps, totalSteps, consecutiveDays)
+            }
+        }
+
+        // Configura l'adapter
+        achievementsAdapter = AchievementAdapter(emptyList())
+        binding.recyclerView.adapter = achievementsAdapter
+        binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
+
+        // Osserva i cambiamenti negli achievements
+        stepCountViewModel.achievements.observe(viewLifecycleOwner) { achievements ->
+            achievementsAdapter.updateAchievements(achievements)
+        }
         return binding.root
     }
 
@@ -32,37 +75,6 @@ class ItemListFragment : Fragment() {
         // Trova il RecyclerView nel layout
         recyclerView = view.findViewById(R.id.recyclerView)
 
-        //TODO dopo i test rimuovi i ture dagli achievements
-
-        // Inizializza i dati (in un'app reale, questi potrebbero venire da un database o un'API)
-        val achievements = listOf(
-            Achievement("Primo Passo", "Completa 1.000 passi in un giorno.", true),
-            Achievement("Piccolo Camminatore", "Completa 5.000 passi in un giorno.", true),
-            Achievement("Costanza Iniziale", "Completa 5.000 passi al giorno per 3 giorni consecutivi.", true),
-            Achievement("Camminatore Quotidiano", "Completa 10.000 passi in un giorno."),
-            Achievement("Semplicemente Passeggiando", "Completa 50.000 passi in una settimana."),
-            Achievement("Caminatore Determinato", "Completa 10.000 passi al giorno per 7 giorni consecutivi."),
-            Achievement("Prima Pietra", "Completa 100.000 passi in totale."),
-            Achievement("Settimana Perfetta", "Completa 70.000 passi in una settimana."),
-            Achievement("Camminatore Mensile", "Completa 300.000 passi in un mese."),
-            Achievement("Giorno di Maratona", "Completa 42.195 passi in un giorno (equivalente a una maratona)."),
-            Achievement("Camminatore Dedito", "Completa 10.000 passi al giorno per 30 giorni consecutivi."),
-            Achievement("Milione di Passi", "Completa 1.000.000 di passi in totale."),
-            Achievement("Scalata delle Cime", "Completa 20.000 passi in un giorno."),
-            Achievement("Doppia Maratona", "Completa 84.390 passi in un giorno (equivalente a due maratone)."),
-            Achievement("Camminatore dell'Anno", "Completa 3.650.000 passi in un anno."),
-            Achievement("Camminatore Impavido", "Completa 50.000 passi in un giorno."),
-            Achievement("Devoto della Passeggiata", "Completa 10.000 passi al giorno per 100 giorni consecutivi."),
-            Achievement("Dieci Milioni di Passi", "Completa 10.000.000 di passi in totale."),
-            Achievement("Superstar del Cammino", "Completa 100.000 passi in un giorno."),
-            Achievement("Leggenda del Cammino", "Completa 50.000.000 di passi in totale.")
-        )
-
-        // Imposta l'adapter per il RecyclerView
-        adapter = AchievementAdapter(achievements)
-        recyclerView.adapter = adapter
-        // Imposta il layout manager
-        recyclerView.layoutManager = LinearLayoutManager(context)
     }
 
     //TODO
@@ -70,5 +82,12 @@ class ItemListFragment : Fragment() {
         super.onPause()
         findNavController().popBackStack(R.id.itemListFragment, false)
     }
+
+    private fun updateRecyclerView(achievements: List<Achievement>) {
+        adapter = AchievementAdapter(achievements)
+        binding.recyclerView.adapter = adapter
+        adapter.notifyDataSetChanged()
+    }
+
 }
 

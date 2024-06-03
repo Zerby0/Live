@@ -95,7 +95,7 @@ class StepCounterService : Service(), SensorEventListener {
             stepCount = totalStepCount - initialStepCount
 
             // Invio dei dati al database
-            val liveDatabase = LiveDatabaseInitializer.getInstance()
+            val liveDatabase = LiveDatabaseInitializer.getInstance(this)
             val stepCountDao = liveDatabase.stepCountDao()
             val stepCountObj = StepCount(date = currentDate, steps = stepCount)
 

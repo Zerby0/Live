@@ -16,7 +16,18 @@ object LiveDatabaseInitializer {
             .build()
     }
 
-    fun getInstance(): LiveDatabase {
-        return instance ?: throw IllegalStateException("Database not initialized")
+    @Volatile
+    private var INSTANCE: LiveDatabase? = null
+
+    fun getInstance(context: Context): LiveDatabase {
+        return INSTANCE ?: synchronized(this) {
+            val instance = Room.databaseBuilder(
+                context.applicationContext,
+                LiveDatabase::class.java,
+                "live_database"
+            ).build()
+            INSTANCE = instance
+            instance
+        }
     }
 }
