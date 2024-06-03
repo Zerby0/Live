@@ -91,6 +91,8 @@ class HomeFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        // Rimuovi l'osservatore per evitare memory leak
+        stepCountViewModel.dailyStepCountLiveData?.removeObservers(viewLifecycleOwner)
         _binding = null
     }
 }
