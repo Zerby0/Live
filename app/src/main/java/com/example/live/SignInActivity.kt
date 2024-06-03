@@ -23,6 +23,7 @@
         // Altro
         private lateinit var binding: ActivitySignInBinding
         private val REQUEST_CODE = 101
+        private var position = ""
 
         override fun onCreate(savedInstanceState: Bundle?) {
             super.onCreate(savedInstanceState)
@@ -31,10 +32,6 @@
             fbAnalytics = FirebaseAnalytics.getInstance(this)
             fusedLocProvider = LocationServices.getFusedLocationProviderClient(this)
 
-            // Evento di test (capire perché Firebase non apre i dettagli)
-            val testBundle = Bundle()
-            testBundle.putString("test_key", "test_value")
-            fbAnalytics.logEvent("test_event", testBundle)
 
             binding = ActivitySignInBinding.inflate(layoutInflater)
             setContentView(binding.root)
@@ -112,18 +109,15 @@
                 putString("manufacturer", android.os.Build.MANUFACTURER)
                 putString("hardware", android.os.Build.HARDWARE)
                 putString("deviceOS", android.os.Build.VERSION.RELEASE)
-                putString("position", getLocation(fusedLocProvider))
-            }
-            // Info posizione
-            dataBundle.apply {
-
+                if (position.isNotBlank()) {
+                    putString("position", position)
+                }
             }
 
             return dataBundle
         }
 
-        private fun getLocation(fusedLocProvClient: FusedLocationProviderClient) : String {
-            var pos = ""
+        private fun checkLocPerms(){
             // Controlla permessi posizione
             if (ContextCompat.checkSelfPermission(
                     this,
@@ -134,14 +128,21 @@
                 ) != PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION), REQUEST_CODE)
             }
+        }
+
+        private fun getLocation(fusedLocProvClient: FusedLocationProviderClient) {
             // Ottieni posizione
+            checkLocPerms()
+            /*
             val location = fusedLocProvClient.lastLocation
+
             location.addOnSuccessListener {
                 if (it != null) {
-                    pos = "${it.latitude}, ${it.longitude}"
+                    position = "${it.latitude}, ${it.longitude}"
                 }
             }
-            return pos
+            */
+
         }
 
     }
