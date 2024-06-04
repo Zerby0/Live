@@ -2,6 +2,7 @@ package com.example.live
 
 import android.content.ContentValues.TAG
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -12,6 +13,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.live.databinding.FragmentHomeBinding
+import com.google.firebase.auth.FirebaseAuth
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -22,6 +24,7 @@ class HomeFragment : Fragment() {
     private var stepGoal = 10000
     private lateinit var viewModel: StepCountViewModel
     private val currentDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
+    private lateinit var fbAuth: FirebaseAuth
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -56,6 +59,20 @@ class HomeFragment : Fragment() {
                 updateProgressBar(binding.passiText.text.toString().substringAfter("Steps: ").toIntOrNull() ?: 0)
                 Toast.makeText(requireContext(), "Goal updated to $stepGoal steps", Toast.LENGTH_SHORT).show()
             }
+        }
+
+        binding.logoutButton.setOnClickListener {
+            fbAuth = FirebaseAuth.getInstance()
+            fbAuth.signOut()
+            // Rimuovi l'utente dall'accesso automatico nelle sharedPreferences
+            val sharedPrefLogin = requireActivity().getSharedPreferences("logged_users", Context.MODE_PRIVATE)
+            val edit = sharedPrefLogin.edit()
+            edit.remove("user")
+            edit.remove("pw")
+            // Chiudi l'editor
+            edit.apply()
+            val intent = Intent(requireContext(), SignInActivity::class.java)
+            startActivity(intent)
         }
     }
 

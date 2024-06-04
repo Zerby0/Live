@@ -57,7 +57,6 @@ class SignInActivity : AppCompatActivity() {
                         edit.putString("pw", pw)
                         // Close editor
                         edit.apply()
-
                         // Move user to Main Activity
                         val intent = Intent(this, MainActivity::class.java)
                         startActivity(intent)
