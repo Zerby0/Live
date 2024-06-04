@@ -5,6 +5,7 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.app.Service
+import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
@@ -12,21 +13,25 @@ import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
-import android.os.Build
 import android.os.IBinder
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import kotlinx.coroutines.CoroutineScope
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class StepCounterService : Service(), SensorEventListener {
 
     private lateinit var sensorManager: SensorManager
     private var stepCounterSensor: Sensor? = null
     private var stepCount = 0
-    private var calorieCount = 0.0
     private var initialStepCount = -1
-    private val caloriesPerStep  = 0.04
-    private lateinit var sharedPreferences: SharedPreferences
+    private val currentDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
 
     override fun onCreate() {
         super.onCreate()
@@ -39,10 +44,6 @@ class StepCounterService : Service(), SensorEventListener {
 
         // Avvia il servizio in foreground
         startForegroundService()
-
-        // Inizializza SharedPreferences
-        sharedPreferences = getSharedPreferences("stepCounterPrefs", Context.MODE_PRIVATE)
-        stepCount = sharedPreferences.getInt("stepCount", 0)
 
         // Registra il listener per il sensore di contapassi se il sensore è disponibile
         if (stepCounterSensor != null) {
@@ -93,20 +94,22 @@ class StepCounterService : Service(), SensorEventListener {
                 initialStepCount = totalStepCount
             }
             stepCount = totalStepCount - initialStepCount
-            calorieCount = stepCount * caloriesPerStep
-            Log.d("StepCounterService", "Conteggio passi: $stepCount")
 
-            // Salva il conteggio dei passi in SharedPreferences
-            val editor = sharedPreferences.edit()
-            editor.putInt("stepCount", stepCount)
-            editor.putFloat("calorieCount", calorieCount.toFloat())
-            editor.apply()
+            val liveDatabase = LiveDatabase.getDatabase(this)
+            val stepCountDao = liveDatabase.stepCountDao()
 
-            // Invia i dati tramite broadcast locale
-            val intent = Intent("StepCounterUpdate")
-            intent.putExtra("stepCount", stepCount)
-            intent.putExtra("calorieCount", calorieCount)
-            LocalBroadcastManager.getInstance(this).sendBroadcast(intent)
+            // Avvio di una coroutine per inserire o aggiornare i dati nel database
+            CoroutineScope(Dispatchers.IO).launch {
+                val existingStepCountLiveData = stepCountDao.getStepCountForDate(currentDate)
+                val existingStepCount = existingStepCountLiveData?.value
+                if (existingStepCount != null) {
+                    existingStepCount.steps += stepCount
+                    stepCountDao.insert(existingStepCount)
+                } else {
+                    val stepCountObj = StepCount(date = currentDate, steps = stepCount)
+                    stepCountDao.insert(stepCountObj)
+                }
+            }
         }
     }
 

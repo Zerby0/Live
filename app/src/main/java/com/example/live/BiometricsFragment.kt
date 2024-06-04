@@ -36,7 +36,7 @@ class BiometricsFragment : Fragment() {
     }
     private fun calculateBiometrics() {
         val selectedSexId = binding.radioGroupSex.checkedRadioButtonId
-        val sex = if (selectedSexId == R.id.radioMale) "M" else "F"
+        val sex = if (selectedSexId == R.id.radioMale) "M" else if (selectedSexId == R.id.radioFemale) "F" else null
         val age = binding.editTextText.text.toString().toIntOrNull()
         val height = binding.editTextText2.text.toString().toIntOrNull()
         val weight = binding.editTextText3.text.toString().toIntOrNull()
@@ -49,7 +49,7 @@ class BiometricsFragment : Fragment() {
             else -> 1.0
         }
 
-        if (age == null || height == null || weight == null || sex.isEmpty() || age > 130 || height > 250 || weight > 500) {
+        if (age == null || height == null || weight == null || sex.isNullOrBlank() || age > 130 || height > 250 || weight > 500) {
             binding.tvResults.text = "Per favore, inserisci tutti i campi correttamente."
             return
         }

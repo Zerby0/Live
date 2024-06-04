@@ -9,11 +9,12 @@
         android:id="@+id/passi_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="132dp"
-        android:text="Steps: 0"
+        android:layout_marginTop="52dp"
+        android:text="@string/steps_0"
         android:textSize="40sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.058"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -22,29 +23,29 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
-        android:text="Calories: 0"
+        android:text="@string/calories_0"
         android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.501"
+        app:layout_constraintHorizontal_bias="0.052"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/passi_text"
-        app:layout_constraintVertical_bias="0.024" />
+        app:layout_constraintVertical_bias="0.0" />
 
     <ProgressBar
         android:id="@+id/progressBar"
         style="?android:attr/progressBarStyleLarge"
         android:layout_width="195dp"
         android:layout_height="203dp"
-        android:layout_marginTop="19dp"
-        android:layout_marginBottom="264dp"
         android:indeterminateOnly="false"
         android:progressDrawable="@drawable/progress_bar"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.583"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/calorie_bruciate_text" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.076" />
 
     <Button
         android:id="@+id/setGoalButton"
@@ -52,42 +53,28 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="16dp"
         android:layout_marginVertical="16dp"
-        android:layout_marginTop="16dp"
         android:background="@drawable/rounded_button"
-        android:text="Set Goal"
+        android:text="@string/set_goal"
         android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.501"
+        app:layout_constraintHorizontal_bias="0.588"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/goalInput" />
+        app:layout_constraintTop_toBottomOf="@+id/goalInput"
+        app:layout_constraintVertical_bias="0.0" />
 
     <EditText
         android:id="@+id/goalInput"
         android:layout_width="195dp"
         android:layout_height="49dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="180dp"
-        android:gravity="center"
-        android:hint="Daily step goal"
+        android:layout_marginTop="13dp"
         android:background="@drawable/edittext_background"
+        android:gravity="center"
+        android:hint="@string/daily_step_goal"
         android:inputType="number"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.494"
+        app:layout_constraintHorizontal_bias="0.583"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/progressBar" />
-
-    <Button
-        android:id="@+id/logoutButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="20dp"
-        android:background="@drawable/rounded_button"
-        android:text="LOGOUT"
-        android:textColor="@color/white"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
