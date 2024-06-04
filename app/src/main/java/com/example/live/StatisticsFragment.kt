@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import com.example.live.databinding.FragmentHomeBinding
 import com.example.live.databinding.FragmentStatisticBinding
 import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.logEvent
 
 class StatisticsFragment : Fragment() {
 

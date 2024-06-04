@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import com.example.live.databinding.FragmentBiometricBinding
 import com.example.live.databinding.FragmentSuggestionsBinding
 import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.logEvent
 
 class BiometricsFragment : Fragment() {
 
