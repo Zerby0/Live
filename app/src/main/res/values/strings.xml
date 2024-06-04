@@ -25,4 +25,15 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="achievemnts">Achievemnts</string>
     <string name="quest">Quest</string>
+    <string name="password">Password</string>
+    <string name="sign_in">Sign In</string>
+    <string name="not_registered">Non sei ancora registrato? Iscriviti qui!</string>
+    <string name="email">Email</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="already_account">Hai già un account? Accedi qui!</string>
+    <string name="set_goal">Set Goal</string>
+    <string name="daily_step_goal">Daily step goal</string>
+    <string name="calories_0">Calories: 0</string>
+    <string name="steps_0">Steps: 0</string>
 </resources>

@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/fragment_container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".BiometricsFragment">
+
+    <FrameLayout
+        android:id="@+id/fragmentContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/tvResults"
+        android:layout_width="250dp"
+        android:layout_height="137dp"
+        android:gravity="center"
+        android:text=""
+        android:textAlignment="center"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.78"
+        app:layout_constraintStart_toEndOf="@+id/editTextText2"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.06999999" />
+    <EditText
+        android:id="@+id/editTextText"
+        android:layout_width="300dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/edittext_background"
+        android:hint="@string/age"
+        android:inputType="number"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/editTextText2"
+        android:layout_width="300dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:hint="@string/height_cm"
+        android:background="@drawable/edittext_background"
+        android:inputType="number"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editTextText" />
+
+    <EditText
+        android:id="@+id/editTextText3"
+        android:layout_width="300dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:hint="@string/weight_kg"
+        android:background="@drawable/edittext_background"
+        android:inputType="number"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editTextText2" />
+
+    <RadioGroup
+        android:id="@+id/radioGroupSex"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:orientation="horizontal"
+        android:gravity="center"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editTextText3">
+
+        <RadioButton
+            android:id="@+id/radioMale"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:text="@string/m" />
+
+        <RadioButton
+            android:id="@+id/radioFemale"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:text="@string/f" />
+    </RadioGroup>
+
+    <Spinner
+        android:id="@+id/spinnerLAF"
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:entries="@array/laf_values"
+        android:background="@drawable/edittext_background"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/radioGroupSex" />
+
+    <Button
+        android:id="@+id/btnCalculate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="16dp"
+        android:background="@drawable/rounded_button"
+        android:text="@string/calcola"
+        android:textColor="@color/white"
+        android:textAlignment="center"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/spinnerLAF" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
