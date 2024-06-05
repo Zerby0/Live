@@ -36,4 +36,6 @@
     <string name="daily_step_goal">Daily step goal</string>
     <string name="calories_0">Calories: 0</string>
     <string name="steps_0">Steps: 0</string>
+    <string name="logout">Logout</string>
+    <string name="set_goal_vert">S\ne\nt\n \nG\no\na\nl</string>
 </resources>

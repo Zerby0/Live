@@ -1,26 +1,25 @@
 package com.example.live
 
-import android.content.ContentValues
-import android.os.Bundle
-import android.util.Log
-import androidx.appcompat.app.AppCompatActivity
-import com.logrocket.core.SDK
-import android.content.Intent
 import android.Manifest
-import android.content.BroadcastReceiver
+import android.content.ContentValues
+import android.content.Context
+import android.content.Intent
+import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.os.Build
+import android.os.Bundle
+import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import android.content.Context
-import android.content.IntentFilter
-import android.content.SharedPreferences
-import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.google.firebase.FirebaseApp
 import com.google.firebase.database.FirebaseDatabase
+import com.logrocket.core.SDK
 
 class MainActivity : AppCompatActivity() {
 
@@ -32,6 +31,12 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        //gestione toolbar
+        val tb = findViewById<Toolbar>(R.id.toolbar)
+        setSupportActionBar(tb)
+        supportActionBar?.setDisplayShowTitleEnabled(false) // Rimuove il titolo dell'app dalla Toolbar
+        supportActionBar?.setLogo(R.drawable.logo)
 
         Log.v(ContentValues.TAG, "Si sta avviando l'app")
         val userData: MutableMap<String, String> = HashMap()
@@ -47,6 +52,7 @@ class MainActivity : AppCompatActivity() {
         FirebaseDatabase.getInstance().setPersistenceEnabled(true)
         // Inizializza il database Room
         LiveDatabase.getDatabase(this)
+
 
         // Per navigation
         val navHostFragment = supportFragmentManager
@@ -93,6 +99,28 @@ class MainActivity : AppCompatActivity() {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 startStepCounterService()
             }
+        }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_toolbar, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.action_logout -> {
+                // Handle logout logic here
+                val sharedPrefLogin = getSharedPreferences("logged_users", Context.MODE_PRIVATE)
+                val edit = sharedPrefLogin.edit()
+                edit.remove("user")
+                edit.remove("pw")
+                edit.apply()
+                val intent = Intent(this, SignInActivity::class.java)
+                startActivity(intent)
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
         }
     }
 }

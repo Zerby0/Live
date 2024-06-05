@@ -18,4 +18,5 @@
     <color name="color_icon_inactive">#0000FF</color>
     <color name="grey">#808080</color>
     <color name="blue">#0000FF</color>
+    <color name="lite_grey" >#FFF1F5F8</color>
 </resources>

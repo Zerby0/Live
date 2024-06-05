@@ -60,20 +60,6 @@ class HomeFragment : Fragment() {
                 Toast.makeText(requireContext(), "Goal updated to $stepGoal steps", Toast.LENGTH_SHORT).show()
             }
         }
-
-        binding.logoutButton.setOnClickListener {
-            fbAuth = FirebaseAuth.getInstance()
-            fbAuth.signOut()
-            // Rimuovi l'utente dall'accesso automatico nelle sharedPreferences
-            val sharedPrefLogin = requireActivity().getSharedPreferences("logged_users", Context.MODE_PRIVATE)
-            val edit = sharedPrefLogin.edit()
-            edit.remove("user")
-            edit.remove("pw")
-            // Chiudi l'editor
-            edit.apply()
-            val intent = Intent(requireContext(), SignInActivity::class.java)
-            startActivity(intent)
-        }
     }
 
     fun updateStepCount(stepCount: Int, calorieCount: Double) {

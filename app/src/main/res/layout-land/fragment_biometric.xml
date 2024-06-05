@@ -10,8 +10,9 @@
     <FrameLayout
         android:id="@+id/fragmentContainer"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-    </FrameLayout>
+        android:layout_height="match_parent"
+        tools:layout_editor_absoluteX="175dp"
+        tools:layout_editor_absoluteY="0dp"></FrameLayout>
 
     <TextView
         android:id="@+id/tvResults"
@@ -26,19 +27,25 @@
         app:layout_constraintStart_toEndOf="@+id/editTextText2"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.06999999" />
+
     <EditText
         android:id="@+id/editTextText"
         android:layout_width="300dp"
         android:layout_height="48dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="60dp"
+        android:layout_marginEnd="16dp"
         android:background="@drawable/edittext_background"
         android:hint="@string/age"
         android:inputType="number"
         android:paddingStart="16dp"
         android:paddingEnd="16dp"
+        app:layout_constraintBottom_toTopOf="@+id/editTextText2"
+        app:layout_constraintEnd_toStartOf="@+id/fragmentContainer"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.51" />
 
     <EditText
         android:id="@+id/editTextText2"
@@ -46,11 +53,16 @@
         android:layout_height="48dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/edittext_background"
+        android:hint="@string/height_cm"
+        android:inputType="number"
         android:paddingStart="16dp"
         android:paddingEnd="16dp"
-        android:hint="@string/height_cm"
-        android:background="@drawable/edittext_background"
-        android:inputType="number"
+        app:layout_constraintBottom_toTopOf="@+id/editTextText3"
+        app:layout_constraintEnd_toStartOf="@+id/fragmentContainer"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editTextText" />
 
@@ -59,12 +71,13 @@
         android:layout_width="300dp"
         android:layout_height="48dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/edittext_background"
+        android:hint="@string/weight_kg"
+        android:inputType="number"
         android:paddingStart="16dp"
         android:paddingEnd="16dp"
-        android:hint="@string/weight_kg"
-        android:background="@drawable/edittext_background"
-        android:inputType="number"
+        app:layout_constraintBottom_toTopOf="@+id/spinnerLAF"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editTextText2" />
 
@@ -72,11 +85,13 @@
         android:id="@+id/radioGroupSex"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:orientation="horizontal"
         android:gravity="center"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextText3">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.36">
 
         <RadioButton
             android:id="@+id/radioMale"
@@ -106,12 +121,12 @@
         android:id="@+id/btnCalculate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
         android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
         android:background="@drawable/rounded_button"
         android:text="@string/calcola"
-        android:textColor="@color/white"
         android:textAlignment="center"
+        android:textColor="@color/white"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/spinnerLAF" />
 
