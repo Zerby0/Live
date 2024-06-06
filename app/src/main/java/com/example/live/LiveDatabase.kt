@@ -19,7 +19,7 @@ abstract class LiveDatabase : RoomDatabase() {
                     context.applicationContext,
                     LiveDatabase::class.java,
                     "live_database"
-                ).fallbackToDestructiveMigration() // Permette migrazioni distruttive
+                ).fallbackToDestructiveMigration()
                     .build()
                 INSTANCE = instance
                 instance
