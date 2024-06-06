@@ -23,4 +23,8 @@ class StepCountRepository(private val stepCountDao: StepCountDao) {
     suspend fun insert(stepCount: StepCount) {
         stepCountDao.insert(stepCount)
     }
+
+    suspend fun getStepCountsForDates(dates: List<String>): List<StepCount> {
+        return stepCountDao.getStepCountsForDates(dates)
+    }
 }

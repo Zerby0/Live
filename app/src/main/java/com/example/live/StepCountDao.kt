@@ -24,4 +24,7 @@ interface StepCountDao {
 
     @Query("SELECT date FROM step_count WHERE steps >= 10000 ORDER BY date ASC")
     fun getDaysWithMinimumSteps(): LiveData<List<String>>
+
+    @Query("SELECT * FROM step_count WHERE date IN (:dates)")
+    suspend fun getStepCountsForDates(dates: List<String>): List<StepCount>
 }

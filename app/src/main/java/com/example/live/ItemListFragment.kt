@@ -72,7 +72,7 @@ class ItemListFragment : Fragment() {
 
     private fun checkAchievements() {
         // Supponiamo che tu abbia un ViewModel con i dati dei passi
-        val viewModel = ViewModelProvider(this).get(StepCountViewModel::class.java)
+        val viewModel = ViewModelProvider(this)[StepCountViewModel::class.java]
         viewModel.getStepCountForDate(currentDate)?.observe(viewLifecycleOwner) { stepCount ->
             if (stepCount != null) {
                 for (achievement in achievements) {

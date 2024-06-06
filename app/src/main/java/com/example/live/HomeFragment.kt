@@ -37,11 +37,11 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel = ViewModelProvider(this)[StepCountViewModel::class.java]
-
         // Recupera il traguardo salvato
         val sharedPreferences = requireActivity().getPreferences(Context.MODE_PRIVATE)
         stepGoal = sharedPreferences.getInt("stepGoal", 10000)
+
+        viewModel = ViewModelProvider(this)[StepCountViewModel::class.java]
 
         // Osserva i dati del conteggio passi
         viewModel.getStepCountForDate(currentDate)?.observe(viewLifecycleOwner) { stepCount ->
@@ -62,7 +62,7 @@ class HomeFragment : Fragment() {
         }
     }
 
-    fun updateStepCount(stepCount: Int, calorieCount: Double) {
+    private fun updateStepCount(stepCount: Int, calorieCount: Double) {
         binding.passiText.text = "Steps: $stepCount"
         binding.calorieBruciateText.text = "Calories: $calorieCount"
         updateProgressBar(stepCount)
