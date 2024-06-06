@@ -116,10 +116,9 @@ class HomeFragment : Fragment() {
     }
     private fun fragmentSwitchLog(time: Long) {
         val bundle = Bundle().apply {
-            putString("fragment", "HomeFragment")
             putLong("time", time)
         }
-        fbAnalytics.logEvent("fragment_switch_main_activity", bundle)
+        fbAnalytics.logEvent("home_fragment_switch", bundle)
     }
 
 }
