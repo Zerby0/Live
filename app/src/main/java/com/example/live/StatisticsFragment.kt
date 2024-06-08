@@ -60,7 +60,7 @@ class StatisticsFragment : Fragment() {
 
             val barDataSet = BarDataSet(entries, "Numero di Passi")
             barDataSet.color = ContextCompat.getColor(requireContext(), R.color.purple_200)
-            barDataSet.valueTextColor = Color.WHITE
+            barDataSet.valueTextColor = Color.GRAY
             barDataSet.valueTextSize = 10f
 
             val data = BarData(barDataSet)
@@ -71,12 +71,12 @@ class StatisticsFragment : Fragment() {
             xAxis.setDrawGridLines(false)
             xAxis.granularity = 1f
             xAxis.valueFormatter = IndexAxisValueFormatter(dates)
-            xAxis.textColor = Color.WHITE
+            xAxis.textColor = Color.GRAY
             xAxis.textSize = 12f
 
             val leftAxis = binding.barChart.axisLeft
             leftAxis.setDrawGridLines(false)
-            leftAxis.textColor = Color.WHITE
+            leftAxis.textColor = Color.GRAY
             leftAxis.textSize = 12f
 
             val rightAxis = binding.barChart.axisRight
