@@ -37,4 +37,10 @@
         android:name="com.example.live.BiometricsFragment"
         android:label="Notifications"
         tools:layout="@layout/fragment_biometric" />
+
+    <fragment
+        android:id="@+id/ProfileFragment"
+        android:name="com.example.live.ProfileFragment"
+        android:label="Profile"
+        tools:layout="@layout/fragment_profile" />
 </navigation>

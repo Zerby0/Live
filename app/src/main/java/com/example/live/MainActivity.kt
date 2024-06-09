@@ -120,6 +120,15 @@ class MainActivity : AppCompatActivity() {
                 startActivity(intent)
                 true
             }
+
+            R.id.action_settings -> {
+                val navHostFragment = supportFragmentManager
+                    .findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+                val navController = navHostFragment.navController
+                navController.navigate(R.id.ProfileFragment)
+                true
+            }
+
             else -> super.onOptionsItemSelected(item)
         }
     }

@@ -38,4 +38,6 @@
     <string name="steps_0">Steps: 0</string>
     <string name="logout">Logout</string>
     <string name="set_goal_vert">S\ne\nt\n \nG\no\na\nl</string>
+    <string name="profile">Profile</string>
+    <string name="change_image">change image</string>
 </resources>
