@@ -19,18 +19,14 @@ class SignInActivity : AppCompatActivity() {
     // Telemetria Firebase
     private lateinit var fbAuth: FirebaseAuth
     private lateinit var fbAnalytics: FirebaseAnalytics
-    private lateinit var fusedLocProvider : FusedLocationProviderClient
     // Altro
     private lateinit var binding: ActivitySignInBinding
-    private val REQUEST_CODE = 101
-    private var position = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         fbAuth = FirebaseAuth.getInstance()
         fbAnalytics = FirebaseAnalytics.getInstance(this)
-        fusedLocProvider = LocationServices.getFusedLocationProviderClient(this)
 
         binding = ActivitySignInBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -108,50 +104,10 @@ class SignInActivity : AppCompatActivity() {
             putString("manufacturer", android.os.Build.MANUFACTURER)
             putString("hardware", android.os.Build.HARDWARE)
             putString("deviceOS", android.os.Build.VERSION.RELEASE)
-            getLocation()
-            if (position.isNotBlank()) {
-                putString("position", position)
-            }
         }
 
         return dataBundle
     }
 
-
-    private fun getLocation() {
-        // Controlla permessi posizione
-        if (ContextCompat.checkSelfPermission(
-                this,
-                android.Manifest.permission.ACCESS_FINE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(
-                this,
-                android.Manifest.permission.ACCESS_COARSE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION), REQUEST_CODE)
-        }
-        // Ottiene posizione
-        fusedLocProvider.lastLocation.addOnSuccessListener {
-            position = "${it.latitude}, ${it.longitude}"
-        }
-    }
-
-    // Gestione permessi concessi/rifiutati dall'utente
-    // Flusso logico: getLocation richiede permessi, l'utente fa la sua scelta
-    // onRequestPermissionsResult controlla la scelta e sceglie se richiamare in callback getLocation o no
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        // Controlla che la richiesta sia quella giusta (posizione)
-        if (requestCode == REQUEST_CODE) {
-            if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
-                getLocation()
-            } else {
-                position = ""
-            }
-        }
-    }
 
 }
