@@ -18,6 +18,9 @@ import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DatabaseException
+import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.logrocket.core.SDK
 
@@ -25,6 +28,8 @@ class MainActivity : AppCompatActivity() {
 
     private val REQUEST_CODE = 100
     private lateinit var sharedPreferences: SharedPreferences
+    private lateinit var firebaseAuth: FirebaseAuth
+    private lateinit var database: DatabaseReference
     var stepCount: Int = 0
     var calorieCount: Double = 0.0
 
@@ -32,34 +37,38 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        //gestione toolbar
+        // Setup Firebase persistence
+        setupFirebasePersistence()
+
+        // Initialize Firebase after setting persistence
+        firebaseAuth = FirebaseAuth.getInstance()
+        database = FirebaseDatabase.getInstance().reference
+
+        // Setup toolbar
         val tb = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(tb)
-        supportActionBar?.setDisplayShowTitleEnabled(false) // Rimuove il titolo dell'app dalla Toolbar
+        supportActionBar?.setDisplayShowTitleEnabled(false)
         supportActionBar?.setLogo(R.drawable.logo)
 
         Log.v(ContentValues.TAG, "Si sta avviando l'app")
         val userData: MutableMap<String, String> = HashMap()
 
-        // Per LogRocket
+        // For LogRocket
         userData["email"] = intent.getStringExtra("user_email").orEmpty()
         SDK.identify("28dvm2jfa", userData)
         Log.v(ContentValues.TAG, "Identity funziona")
 
-        // Inizializza Firebase
-        FirebaseDatabase.getInstance().setPersistenceEnabled(true)
-        // Inizializza il database Room
+        // Initialize Room database
         LiveDatabase.getDatabase(this)
 
-
-        // Per navigation
+        // Navigation setup
         val navHostFragment = supportFragmentManager
             .findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         val navController = navHostFragment.navController
         val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
         bottomNavigationView.setupWithNavController(navController)
 
-        // Verifica i permessi a run time in base alla versione Android (dalla <=10 non serve, quindi non controlla)
+        // Check runtime permissions
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACTIVITY_RECOGNITION)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -72,18 +81,45 @@ class MainActivity : AppCompatActivity() {
             startStepCounterService()
         }
 
-        // Inizializza SharedPreferences
+        // Initialize SharedPreferences
         sharedPreferences = getSharedPreferences("stepCounterPrefs", Context.MODE_PRIVATE)
 
-        // Carica il conteggio dei passi salvato e aggiorna la TextView
-        val savedStepCount = sharedPreferences.getInt("stepCount", 0)
-        val savedCalorieCount = sharedPreferences.getFloat("calorieCount", 0.0f).toDouble()
-        stepCount = savedStepCount
-        calorieCount = savedCalorieCount
+        // Load user-specific data
+        loadUserData()
+    }
+
+    private fun setupFirebasePersistence() {
+        try {
+            FirebaseDatabase.getInstance().setPersistenceEnabled(true)
+        } catch (e: DatabaseException) {
+            // Firebase persistence was already enabled
+            Log.w(ContentValues.TAG, "Firebase persistence is already enabled")
+        }
+    }
+
+    private fun loadUserData() {
+        val userEmail = intent.getStringExtra("user_email") ?: return
+        val userPrefs = getUserSpecificPreferences(userEmail)
+        stepCount = userPrefs.getInt("stepCount", 0)
+        calorieCount = userPrefs.getFloat("calorieCount", 0.0f).toDouble()
+    }
+
+    private fun getUserSpecificPreferences(userEmail: String): SharedPreferences {
+        return getSharedPreferences("stepCounterPrefs_$userEmail", Context.MODE_PRIVATE)
     }
 
     override fun onDestroy() {
         super.onDestroy()
+        saveUserData()
+    }
+
+    private fun saveUserData() {
+        val userEmail = intent.getStringExtra("user_email") ?: return
+        val userPrefs = getUserSpecificPreferences(userEmail)
+        val editor = userPrefs.edit()
+        editor.putInt("stepCount", stepCount)
+        editor.putFloat("calorieCount", calorieCount.toFloat())
+        editor.apply()
     }
 
     private fun startStepCounterService() {
@@ -108,14 +144,15 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.action_logout -> {
-                // Handle logout logic here
                 val sharedPrefLogin = getSharedPreferences("logged_users", Context.MODE_PRIVATE)
                 val edit = sharedPrefLogin.edit()
                 edit.remove("user")
                 edit.remove("pw")
                 edit.apply()
+
                 val intent = Intent(this, SignInActivity::class.java)
                 startActivity(intent)
+                finish()
                 true
             }
 
