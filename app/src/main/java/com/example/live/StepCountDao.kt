@@ -13,9 +13,6 @@ interface StepCountDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(stepCount: StepCount)
 
-    @Query("SELECT * FROM step_count WHERE date = :date")
-    fun getStepCountForDate(date: String): LiveData<StepCount>?
-
     @Query("SELECT * FROM step_count")
     fun getAllStepCounts(): LiveData<List<StepCount>>
 
@@ -24,6 +21,12 @@ interface StepCountDao {
 
     @Query("SELECT date FROM step_count WHERE steps >= 10000 ORDER BY date ASC")
     fun getDaysWithMinimumSteps(): LiveData<List<String>>
+
+    @Query("SELECT * FROM step_count WHERE date = :date LIMIT 1")
+    fun getStepCountForDate(date: String): LiveData<StepCount?>
+
+    @Query("SELECT * FROM step_count ORDER BY date DESC")
+    fun getStepHistory(): LiveData<List<StepCount>>
 
     @Query("SELECT * FROM step_count WHERE date IN (:dates)")
     suspend fun getStepCountsForDates(dates: List<String>): List<StepCount>

@@ -101,7 +101,7 @@ class StepCounterService : Service(), SensorEventListener {
             // Avvio di una coroutine per inserire o aggiornare i dati nel database
             CoroutineScope(Dispatchers.IO).launch {
                 val existingStepCountLiveData = stepCountDao.getStepCountForDate(currentDate)
-                val existingStepCount = existingStepCountLiveData?.value
+                val existingStepCount = existingStepCountLiveData.value
                 if (existingStepCount != null) {
                     existingStepCount.steps += stepCount
                     stepCountDao.insert(existingStepCount)

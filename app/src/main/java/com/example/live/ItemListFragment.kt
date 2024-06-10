@@ -6,15 +6,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.example.live.databinding.FragmentItemListBinding
-import com.example.live.databinding.FragmentStatisticBinding
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -25,38 +19,21 @@ class ItemListFragment : Fragment() {
     private val currentDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
     private var _binding: FragmentItemListBinding? = null
     private val binding get() = _binding!!
+    private lateinit var viewModel: StepCountViewModel
 
-    private val achievements = mutableListOf(
-        Achievement("Primo Passo", "Completa 1.000 passi in un giorno.", listOf(1000, 1)),
-        Achievement("Piccolo Camminatore", "Completa 5.000 passi in un giorno.", listOf(5000, 1)),
-        Achievement("Costanza Iniziale", "Completa 5.000 passi al giorno per 3 giorni consecutivi.", listOf(5000, 3)),
-        Achievement("Camminatore Quotidiano", "Completa 10.000 passi in un giorno.", listOf(10000, 1)),
-        Achievement("Semplicemente Passeggiando", "Completa 50.000 passi in una settimana.", listOf(50000, 7)),
-        Achievement("Caminatore Determinato", "Completa 10.000 passi al giorno per 7 giorni consecutivi.", listOf(10000, 1, 7)),
-        Achievement("Prima Pietra", "Completa 100.000 passi in totale.", listOf(100000)),
-        Achievement("Settimana Perfetta", "Completa 70.000 passi in una settimana.", listOf(70000, 7)),
-        Achievement("Camminatore Mensile", "Completa 300.000 passi in un mese.", listOf(300000, 30)),
-        Achievement("Giorno di Maratona", "Completa 42.195 passi in un giorno (equivalente a una maratona).", listOf(42195, 1)),
-        Achievement("Camminatore Dedito", "Completa 10.000 passi al giorno per 30 giorni consecutivi.", listOf(10000, 1, 30)),
-        Achievement("Milione di Passi", "Completa 1.000.000 di passi in totale.", listOf(1000000)),
-        Achievement("Scalata delle Cime", "Completa 20.000 passi in un giorno.", listOf(20000, 1)),
-        Achievement("Doppia Maratona", "Completa 84.390 passi in un giorno (equivalente a due maratone).", listOf(84390, 1)),
-        Achievement("Camminatore dell'Anno", "Completa 3.650.000 passi in un anno.", listOf(3650000, 365)),
-        Achievement("Camminatore Impavido", "Completa 50.000 passi in un giorno.", listOf(50000, 1)),
-        Achievement("Devoto della Passeggiata", "Completa 10.000 passi al giorno per 100 giorni consecutivi.", listOf(10000, 1, 100)),
-        Achievement("Dieci Milioni di Passi", "Completa 10.000.000 di passi in totale.", listOf(10000000)),
-        Achievement("Superstar del Cammino", "Completa 100.000 passi in un giorno.", listOf(100000, 1)),
-        Achievement("Leggenda del Cammino", "Completa 50.000.000 di passi in totale.", listOf(50000000))
-    )
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentItemListBinding.inflate(inflater, container, false)
+        viewModel = ViewModelProvider(this)[StepCountViewModel::class.java]
+
+        // Inizializza gli achievement
+        viewModel.initializeAchievements()
 
         // Configura l'adapter con la lista di achievement
-        adapter = AchievementAdapter(achievements)
+        adapter = AchievementAdapter(emptyList())
         binding.recyclerView.adapter = adapter
         binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
@@ -66,32 +43,64 @@ class ItemListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Esegui il controllo degli achievement
-        checkAchievements()
+        viewModel.allAchievements.observe(viewLifecycleOwner) { achievementEntities ->
+            val achievements = achievementEntities.map { entity ->
+                Achievement(entity.title, entity.description,
+                    entity.condition, entity.isCompleted)
+            }.toMutableList()
+
+            adapter.setAchievements(achievements)
+            checkAchievements(achievements)
+        }
     }
 
-    private fun checkAchievements() {
-        // Supponiamo che tu abbia un ViewModel con i dati dei passi
-        val viewModel = ViewModelProvider(this)[StepCountViewModel::class.java]
-        viewModel.getStepCountForDate(currentDate)?.observe(viewLifecycleOwner) { stepCount ->
+    private fun checkAchievements(achievements: List<Achievement>) {
+        val stepCountViewModel = ViewModelProvider(this)[StepCountViewModel::class.java]
+
+        stepCountViewModel.getStepCountForDate(currentDate).observe(viewLifecycleOwner) { stepCount ->
             if (stepCount != null) {
-                for (achievement in achievements) {
-                    if (!achievement.isCompleted) {
-                        if (isAchievementUnlocked(achievement, stepCount.steps)) {
-                            achievement.isCompleted = true
-                            // Puoi anche salvare lo stato sbloccato nel database se necessario
+                stepCountViewModel.getStepHistory().observe(viewLifecycleOwner) { stepHistory ->
+                    for (achievement in achievements) {
+                        if (!achievement.isCompleted) {
+                            if (isAchievementUnlocked(achievement, stepCount.steps, stepHistory)) {
+                                achievement.isCompleted = true
+                                viewModel.updateAchievement(Achievement(
+                                    title = achievement.title,
+                                    description = achievement.description,
+                                    condition = achievement.condition,
+                                    isCompleted = achievement.isCompleted
+                                ))
+                            }
                         }
                     }
+                    adapter.notifyDataSetChanged()
                 }
-                adapter.notifyDataSetChanged()
             }
         }
     }
 
-    private fun isAchievementUnlocked(achievement: Achievement, steps: Int): Boolean {
-        // Esegui il controllo delle condizioni
+    private fun isAchievementUnlocked(achievement: Achievement, steps: Int, stepHistory: List<StepCount>): Boolean {
         val requiredSteps = achievement.condition[0]
-        return steps >= requiredSteps
+
+        return when (achievement.condition.size) {
+            1 -> { // achievement basato su passi totali
+                steps >= requiredSteps
+            }
+            2 -> { // achievement basato su passi giornalieri
+                val requiredDays = achievement.condition[1]
+                stepHistory.takeLast(requiredDays).all { it.steps >= requiredSteps }
+            }
+            3 -> { // achievement basato su passi giornalieri consecutivi
+                val requiredDays = achievement.condition[2]
+                val dailySteps = stepHistory.takeLast(requiredDays)
+                if (dailySteps.size < requiredDays) {
+                    false
+                } else {
+                    dailySteps.all { it.steps >= requiredSteps }
+                }
+            }
+            else -> false
+        }
     }
 
     override fun onPause() {

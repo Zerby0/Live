@@ -7,7 +7,6 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
-data class Achievement (val title: String, val description: String, val condition: List<Int>, var isCompleted: Boolean = false)
 
 class AchievementAdapter(private var achievements: List<Achievement>) :
     RecyclerView.Adapter<AchievementAdapter.AchievementViewHolder>() {
@@ -39,6 +38,10 @@ class AchievementAdapter(private var achievements: List<Achievement>) :
         }
     }
 
+    fun setAchievements(newAchievements: List<Achievement>) {
+        this.achievements = newAchievements
+        notifyDataSetChanged()
+    }
     override fun getItemCount(): Int = achievements.size
 
 }

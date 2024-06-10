@@ -4,7 +4,7 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 
 class StepCountRepository(private val stepCountDao: StepCountDao) {
-    fun getStepCountForDate(date: String): LiveData<StepCount>? {
+    fun getStepCountForDate(date: String): LiveData<StepCount?> {
         return stepCountDao.getStepCountForDate(date)
     }
 
@@ -26,5 +26,9 @@ class StepCountRepository(private val stepCountDao: StepCountDao) {
 
     suspend fun getStepCountsForDates(dates: List<String>): List<StepCount> {
         return stepCountDao.getStepCountsForDates(dates)
+    }
+
+    fun getStepHistory(): LiveData<List<StepCount>>{
+        return stepCountDao.getStepHistory()
     }
 }
