@@ -21,53 +21,52 @@ class SignInActivity : AppCompatActivity() {
         binding = ActivitySignInBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Check if user had already logged in, skip everything and switch to MainActivity
         val sharedPref = getSharedPreferences("logged_users", Context.MODE_PRIVATE)
         val loggedUser = sharedPref.getString("user", null)
         val loggedPw = sharedPref.getString("pw", null)
 
         if (loggedUser != null && loggedPw != null) {
-            fbAuth.signInWithEmailAndPassword(loggedUser, loggedPw)
-            val intent = Intent(this, MainActivity::class.java)
-            startActivity(intent)
-            finish()
+            fbAuth.signInWithEmailAndPassword(loggedUser, loggedPw).addOnCompleteListener {
+                if (it.isSuccessful) {
+                    val user = fbAuth.currentUser
+                    val intent = Intent(this, MainActivity::class.java).apply {
+                        putExtra("user_email", user?.email)
+                    }
+                    startActivity(intent)
+                    finish()
+                }
+            }
         }
 
-        // Send user to sign-up if not registered
         binding.textView3.setOnClickListener {
-            intent = Intent(this, SignUpActivity::class.java)
+            val intent = Intent(this, SignUpActivity::class.java)
             startActivity(intent)
         }
 
-        // Wait for user sign-in action
         binding.button2.setOnClickListener {
-            // Get user data
             val userMail = binding.editTextText7.text.toString()
             val pw = binding.editTextTextPassword.text.toString()
 
-            // Check for empty fields
             if (userMail.isEmpty() || pw.isEmpty()) {
                 Toast.makeText(this, "Non sono ammessi campi vuoti!", Toast.LENGTH_LONG).show()
             } else {
                 fbAuth.signInWithEmailAndPassword(userMail, pw).addOnCompleteListener(this) {
                     if (it.isSuccessful) {
-                        // Save login data in SharedPreferences for future auto-sign-in
                         val edit = sharedPref.edit()
                         edit.putString("user", userMail)
                         edit.putString("pw", pw)
-                        // Close editor
                         edit.apply()
-                        // Move user to Main Activity
-                        val intent = Intent(this, MainActivity::class.java)
+
+                        val intent = Intent(this, MainActivity::class.java).apply {
+                            putExtra("user_email", userMail)
+                        }
                         startActivity(intent)
                         finish()
-                    }
-                    else {
+                    } else {
                         Toast.makeText(this, "Login fallito, riprovare.", Toast.LENGTH_LONG).show()
                     }
                 }
             }
         }
     }
-
 }

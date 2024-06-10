@@ -9,9 +9,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import com.example.live.databinding.FragmentHomeBinding
 import com.example.live.databinding.FragmentStatisticBinding
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.BarData
@@ -19,7 +17,6 @@ import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import java.text.SimpleDateFormat
-import java.util.Date
 import java.util.Locale
 
 
@@ -27,11 +24,7 @@ class StatisticsFragment : Fragment() {
 
     private var _binding: FragmentStatisticBinding? = null
     private val binding get() = _binding!!
-
     private val viewModel: StepCountViewModel by viewModels()
-    private val currentDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
-
-
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -51,7 +44,6 @@ class StatisticsFragment : Fragment() {
         viewModel.getWeeklySteps().observe(viewLifecycleOwner, Observer { stepCounts ->
             val entries = ArrayList<BarEntry>()
             val dates = ArrayList<String>()
-            val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
 
             stepCounts.forEachIndexed { index, stepCount ->
                 entries.add(BarEntry(index.toFloat(), stepCount.steps.toFloat()))
@@ -91,15 +83,8 @@ class StatisticsFragment : Fragment() {
             binding.barChart.invalidate()
         })
     }
-
-
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-    }
-    
-    private fun getStepsForWeekFrom(data: String): List<Int>{
-        var steps = listOf(1)
-        return steps
     }
 }

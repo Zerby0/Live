@@ -31,7 +31,7 @@ class ProfileFragment : Fragment() {
 
         // Carica l'URI dell'immagine salvato
         val uriString = sharedPreferences.getString("selected_image_uri", null)
-        uriString?.let { uriString ->
+        uriString?.let {
             selectedImageUri = Uri.parse(uriString)
             // Carica e mostra l'immagine
             loadCircularImage(selectedImageUri)

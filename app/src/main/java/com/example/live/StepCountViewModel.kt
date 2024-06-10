@@ -60,7 +60,7 @@ class StepCountViewModel(application: Application) : AndroidViewModel(applicatio
         viewModelScope.launch {
             if (achievementDao.getAll().value.isNullOrEmpty()) {
                 val achievements = listOf(
-                    Achievement("Ma Allora Cammini!", "Fai il tuo primo passo, benvenuto", listOf(1), false),
+                    Achievement("Ma Allora Cammini!", "Fai il tuo primo passo, benvenuto.", listOf(1), false),
                     Achievement("Primo Passo", "Completa 1.000 passi in un giorno.", listOf(1000,1), false),
                     Achievement("Piccolo Camminatore", "Completa 5.000 passi in un giorno.", listOf(5000,1), false),
                     Achievement("Costanza Iniziale", "Completa 5.000 passi al giorno per 3 giorni consecutivi.", listOf(5000,3), false),

@@ -17,14 +17,6 @@ android {
         targetSdk 34
         versionCode 1
         versionName "1.0"
-        javaCompileOptions {
-            annotationProcessorOptions {
-                arguments = [
-                        "room.schemaLocation": "$rootDir/Desktop/schemas/schemas".toString(),
-                        "room.exportSchema": "false"
-                ]
-            }
-        }
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {

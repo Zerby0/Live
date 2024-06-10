@@ -42,9 +42,7 @@ class MainActivity : AppCompatActivity() {
         val userData: MutableMap<String, String> = HashMap()
 
         // Per LogRocket
-        userData["name"] = "Andrea"
-        userData["email"] = "AndreaPadovan@gmail.com"
-        userData["subscriptionPlan"] = "premium"
+        userData["email"] = intent.getStringExtra("user_email").orEmpty()
         SDK.identify("28dvm2jfa", userData)
         Log.v(ContentValues.TAG, "Identity funziona")
 
