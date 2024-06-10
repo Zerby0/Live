@@ -45,35 +45,25 @@ class ItemListFragment : Fragment() {
 
         viewModel.allAchievements.observe(viewLifecycleOwner) { achievementEntities ->
             val achievements = achievementEntities.map { entity ->
-                Achievement(entity.title, entity.description,
-                    entity.condition, entity.isCompleted)
-            }.toMutableList()
-
+                Achievement(entity.title, entity.description, entity.condition, entity.isCompleted)
+            }
             adapter.setAchievements(achievements)
             checkAchievements(achievements)
         }
     }
 
     private fun checkAchievements(achievements: List<Achievement>) {
-        val stepCountViewModel = ViewModelProvider(this)[StepCountViewModel::class.java]
-
-        stepCountViewModel.getStepCountForDate(currentDate).observe(viewLifecycleOwner) { stepCount ->
-            if (stepCount != null) {
-                stepCountViewModel.getStepHistory().observe(viewLifecycleOwner) { stepHistory ->
-                    for (achievement in achievements) {
-                        if (!achievement.isCompleted) {
-                            if (isAchievementUnlocked(achievement, stepCount.steps, stepHistory)) {
-                                achievement.isCompleted = true
-                                viewModel.updateAchievement(Achievement(
-                                    title = achievement.title,
-                                    description = achievement.description,
-                                    condition = achievement.condition,
-                                    isCompleted = achievement.isCompleted
-                                ))
-                            }
+        viewModel.getStepCountForDate(currentDate).observe(viewLifecycleOwner) { stepCount ->
+            stepCount?.let { currentStepCount ->
+                viewModel.getStepHistory().observe(viewLifecycleOwner) { stepHistory ->
+                    val achievementsToUpdate = achievements.filter { !it.isCompleted && isAchievementUnlocked(it, currentStepCount.steps, stepHistory) }
+                    if (achievementsToUpdate.isNotEmpty()) {
+                        achievementsToUpdate.forEach { achievement ->
+                            achievement.isCompleted = true
+                            viewModel.updateAchievement(achievement)
                         }
+                        adapter.notifyDataSetChanged()
                     }
-                    adapter.notifyDataSetChanged()
                 }
             }
         }

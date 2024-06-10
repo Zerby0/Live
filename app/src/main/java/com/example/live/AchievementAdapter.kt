@@ -8,6 +8,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
 
+
 class AchievementAdapter(private var achievements: List<Achievement>) :
     RecyclerView.Adapter<AchievementAdapter.AchievementViewHolder>() {
 
@@ -18,8 +19,7 @@ class AchievementAdapter(private var achievements: List<Achievement>) :
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AchievementViewHolder {
-        val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.achievement_item, parent, false)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.achievement_item, parent, false)
         return AchievementViewHolder(view)
     }
 
@@ -27,21 +27,15 @@ class AchievementAdapter(private var achievements: List<Achievement>) :
         val achievement = achievements[position]
         holder.titleTextView.text = achievement.title
         holder.descriptionTextView.text = achievement.description
-
-        // Imposta l'icona in base al valore booleano
-        if (achievement.isCompleted) {
-            holder.iconImageView.setImageResource(R.drawable.ic_star_true)
-            holder.iconImageView.contentDescription = holder.itemView.context.getString(R.string.achievement_completed)
-        } else {
-            holder.iconImageView.setImageResource(R.drawable.ic_star_false)
-            holder.iconImageView.contentDescription = holder.itemView.context.getString(R.string.achievement_not_completed)
-        }
+        holder.iconImageView.setImageResource(
+            if (achievement.isCompleted) R.drawable.ic_star_true else R.drawable.ic_star_false
+        )
     }
 
     fun setAchievements(newAchievements: List<Achievement>) {
-        this.achievements = newAchievements
+        achievements = newAchievements
         notifyDataSetChanged()
     }
-    override fun getItemCount(): Int = achievements.size
 
+    override fun getItemCount(): Int = achievements.size
 }

@@ -82,7 +82,7 @@ class StepCountViewModel(application: Application) : AndroidViewModel(applicatio
                     Achievement("Superstar del Cammino", "Completa 100.000 passi in un giorno.", listOf(100000,1), false),
                     Achievement("Leggenda del Cammino", "Completa 50.000.000 di passi in totale.", listOf(50000000), false)
                 )
-                insertAchievements(achievements)
+                achievementDao.insertAll(*achievements.toTypedArray())
             }
         }
     }
