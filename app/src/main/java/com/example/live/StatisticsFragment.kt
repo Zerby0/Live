@@ -16,6 +16,7 @@ import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
+import com.google.firebase.analytics.FirebaseAnalytics
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -25,6 +26,9 @@ class StatisticsFragment : Fragment() {
     private var _binding: FragmentStatisticBinding? = null
     private val binding get() = _binding!!
     private val viewModel: StepCountViewModel by viewModels()
+    // Firebase
+    private lateinit var fbAnalytics: FirebaseAnalytics
+    private var startTime : Long = 0
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -36,6 +40,8 @@ class StatisticsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        // Inizializza Firebase Analytics
+        fbAnalytics = FirebaseAnalytics.getInstance(requireContext())
 
         binding.btnAchievement.setOnClickListener {
             findNavController().navigate(R.id.action_statistic_to_achievement)
@@ -86,5 +92,22 @@ class StatisticsFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    override fun onResume() {
+        super.onResume()
+        startTime = System.currentTimeMillis()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        val timeSpent = System.currentTimeMillis() - startTime
+        fragmentSwitchLog(timeSpent)
+    }
+    private fun fragmentSwitchLog(time: Long) {
+        val bundle = Bundle().apply {
+            putLong("time", time)
+        }
+        fbAnalytics.logEvent("biometrics_fragment_switch", bundle)
     }
 }

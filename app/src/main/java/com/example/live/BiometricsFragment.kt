@@ -7,11 +7,15 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.example.live.databinding.FragmentBiometricBinding
 import com.example.live.databinding.FragmentSuggestionsBinding
+import com.google.firebase.analytics.FirebaseAnalytics
 
 class BiometricsFragment : Fragment() {
 
     private var _binding: FragmentBiometricBinding? = null
     private val binding get() = _binding!!
+    // Firebase
+    private lateinit var fbAnalytics: FirebaseAnalytics
+    private var startTime : Long = 0
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -23,6 +27,8 @@ class BiometricsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        // Inizializza Firebase Analytics
+        fbAnalytics = FirebaseAnalytics.getInstance(requireContext())
         binding.btnCalculate.setOnClickListener{
             calculateBiometrics()
         }
@@ -98,5 +104,22 @@ class BiometricsFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    override fun onResume() {
+        super.onResume()
+        startTime = System.currentTimeMillis()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        val timeSpent = System.currentTimeMillis() - startTime
+        fragmentSwitchLog(timeSpent)
+    }
+    private fun fragmentSwitchLog(time: Long) {
+        val bundle = Bundle().apply {
+            putLong("time", time)
+        }
+        fbAnalytics.logEvent("biometrics_fragment_switch", bundle)
     }
 }

@@ -7,16 +7,19 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.live.databinding.ActivitySignInBinding
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.analytics.FirebaseAnalytics
 
 class SignInActivity : AppCompatActivity() {
 
     private lateinit var fbAuth: FirebaseAuth
+    private lateinit var fbAnalytics: FirebaseAnalytics
     private lateinit var binding: ActivitySignInBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         fbAuth = FirebaseAuth.getInstance()
+        fbAnalytics = FirebaseAnalytics.getInstance(this)
         if (checkLoggedInUser()) {
             return
         }
@@ -43,6 +46,9 @@ class SignInActivity : AppCompatActivity() {
                         edit.putString("user", userMail)
                         edit.putString("pw", pw)
                         edit.apply()
+                        // Manda dati utente a Firebase
+                        val userData = collectUserData()
+                        fbAnalytics.logEvent("login", userData)
 
                         val intent = Intent(this, MainActivity::class.java)
                         intent.putExtra("user_email", userMail)
@@ -64,6 +70,10 @@ class SignInActivity : AppCompatActivity() {
         if (loggedUser != null && loggedPw != null) {
             fbAuth.signInWithEmailAndPassword(loggedUser, loggedPw).addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
+                    // Invia dati utente a Firebase
+                    val userData = collectUserData()
+                    fbAnalytics.logEvent("login", userData)
+
                     val intent = Intent(this, MainActivity::class.java)
                     intent.putExtra("user_email", loggedUser)
                     startActivity(intent)
@@ -78,5 +88,21 @@ class SignInActivity : AppCompatActivity() {
             return true
         }
         return false
+    }
+
+    private fun collectUserData() : Bundle {
+        val dataBundle = Bundle()
+        // Info dispositivo
+        dataBundle.apply {
+            putLong("time", System.currentTimeMillis())
+            putString("device", android.os.Build.DEVICE)
+            putString("model", android.os.Build.MODEL)
+            putString("brand", android.os.Build.BRAND)
+            putString("manufacturer", android.os.Build.MANUFACTURER)
+            putString("hardware", android.os.Build.HARDWARE)
+            putString("deviceOS", android.os.Build.VERSION.RELEASE)
+        }
+
+        return dataBundle
     }
 }

@@ -13,11 +13,17 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.live.databinding.FragmentHomeBinding
 import java.text.SimpleDateFormat
 import java.util.*
+import com.google.firebase.analytics.FirebaseAnalytics
 
 class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
+
     private val binding get() = _binding!!
+    // Firebase
+    private lateinit var fbAnalytics: FirebaseAnalytics
+    private var startTime : Long = 0
+
     private var stepGoal = 10000
     private lateinit var viewModel: StepCountViewModel
     private val currentDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
@@ -47,6 +53,9 @@ class HomeFragment : Fragment() {
             }
         }
 
+        // Inizializza Firebase Analytics
+        fbAnalytics = FirebaseAnalytics.getInstance(requireContext())
+
         binding.setGoalButton.setOnClickListener {
             val input = binding.goalInput.text.toString()
             if (input.isNotEmpty()) {
@@ -73,5 +82,22 @@ class HomeFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    override fun onResume() {
+        super.onResume()
+        startTime = System.currentTimeMillis()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        val timeSpent = System.currentTimeMillis() - startTime
+        fragmentSwitchLog(timeSpent)
+    }
+    private fun fragmentSwitchLog(time: Long) {
+        val bundle = Bundle().apply {
+            putLong("time", time)
+        }
+        fbAnalytics.logEvent("home_fragment_switch", bundle)
     }
 }
