@@ -23,15 +23,14 @@ import com.google.firebase.database.DatabaseException
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.logrocket.core.SDK
-
 class MainActivity : AppCompatActivity() {
 
     private val REQUEST_CODE = 100
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var firebaseAuth: FirebaseAuth
     private lateinit var database: DatabaseReference
-    var stepCount: Int = 0
-    var calorieCount: Double = 0.0
+    private var stepCount: Int = 0
+    private var calorieCount: Double = 0.0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -84,8 +83,14 @@ class MainActivity : AppCompatActivity() {
         // Initialize SharedPreferences
         sharedPreferences = getSharedPreferences("stepCounterPrefs", Context.MODE_PRIVATE)
 
-        // Load user-specific data
-        loadUserData()
+        val userEmail = intent.getStringExtra("user_email")
+        userEmail?.let {
+            val sharedPref = getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+            with(sharedPref.edit()) {
+                putString("user_email", it)
+                apply()
+            }
+        }
     }
 
     private fun setupFirebasePersistence() {
@@ -95,13 +100,6 @@ class MainActivity : AppCompatActivity() {
             // Firebase persistence was already enabled
             Log.w(ContentValues.TAG, "Firebase persistence is already enabled")
         }
-    }
-
-    private fun loadUserData() {
-        val userEmail = intent.getStringExtra("user_email") ?: return
-        val userPrefs = getUserSpecificPreferences(userEmail)
-        stepCount = userPrefs.getInt("stepCount", 0)
-        calorieCount = userPrefs.getFloat("calorieCount", 0.0f).toDouble()
     }
 
     private fun getUserSpecificPreferences(userEmail: String): SharedPreferences {
@@ -143,19 +141,6 @@ class MainActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
-            R.id.action_logout -> {
-                val sharedPrefLogin = getSharedPreferences("logged_users", Context.MODE_PRIVATE)
-                val edit = sharedPrefLogin.edit()
-                edit.remove("user")
-                edit.remove("pw")
-                edit.apply()
-
-                val intent = Intent(this, SignInActivity::class.java)
-                startActivity(intent)
-                finish()
-                true
-            }
-
             R.id.action_settings -> {
                 val navHostFragment = supportFragmentManager
                     .findFragmentById(R.id.nav_host_fragment) as NavHostFragment
@@ -167,4 +152,5 @@ class MainActivity : AppCompatActivity() {
             else -> super.onOptionsItemSelected(item)
         }
     }
+
 }

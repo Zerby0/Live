@@ -10,6 +10,9 @@ import androidx.room.Update
 @Dao
 interface AchievementDao {
     @Query("SELECT * FROM achievements")
+    fun getAllSync(): List<Achievement>
+
+    @Query("SELECT * FROM achievements")
     fun getAll(): LiveData<List<Achievement>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

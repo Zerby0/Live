@@ -25,7 +25,7 @@ class HomeFragment : Fragment() {
     private var startTime : Long = 0
 
     private var stepGoal = 10000
-    private lateinit var viewModel: StepCountViewModel
+    private lateinit var viewModel: ViewModel
     private val currentDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
 
     override fun onCreateView(
@@ -43,7 +43,7 @@ class HomeFragment : Fragment() {
         val sharedPreferences = requireActivity().getPreferences(Context.MODE_PRIVATE)
         stepGoal = sharedPreferences.getInt("stepGoal", 10000)
 
-        viewModel = ViewModelProvider(this)[StepCountViewModel::class.java]
+        viewModel = ViewModelProvider(this)[ViewModel::class.java]
 
         // Osserva i dati del conteggio passi
         viewModel.getStepCountForDate(currentDate).observe(viewLifecycleOwner) { stepCount ->

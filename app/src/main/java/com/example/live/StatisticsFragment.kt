@@ -17,15 +17,13 @@ import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import com.google.firebase.analytics.FirebaseAnalytics
-import java.text.SimpleDateFormat
-import java.util.Locale
 
 
 class StatisticsFragment : Fragment() {
 
     private var _binding: FragmentStatisticBinding? = null
     private val binding get() = _binding!!
-    private val viewModel: StepCountViewModel by viewModels()
+    private val viewModel: ViewModel by viewModels()
     // Firebase
     private lateinit var fbAnalytics: FirebaseAnalytics
     private var startTime : Long = 0
@@ -47,7 +45,7 @@ class StatisticsFragment : Fragment() {
             findNavController().navigate(R.id.action_statistic_to_achievement)
         }
 
-        viewModel.getWeeklySteps().observe(viewLifecycleOwner, Observer { stepCounts ->
+        viewModel.getWeeklySteps().observe(viewLifecycleOwner) { stepCounts ->
             val entries = ArrayList<BarEntry>()
             val dates = ArrayList<String>()
 
@@ -87,7 +85,7 @@ class StatisticsFragment : Fragment() {
             binding.barChart.animateY(1000)
 
             binding.barChart.invalidate()
-        })
+        }
     }
     override fun onDestroyView() {
         super.onDestroyView()

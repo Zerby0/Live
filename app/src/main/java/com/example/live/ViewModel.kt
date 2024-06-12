@@ -10,12 +10,12 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
 
-class StepCountViewModel(application: Application) : AndroidViewModel(application) {
+class ViewModel(application: Application) : AndroidViewModel(application) {
     private val repository: StepCountRepository
     private val allStepCounts: LiveData<List<StepCount>>
     private val achievementDao = LiveDatabase.getDatabase(application).achievementDao()
     val allAchievements: LiveData<List<Achievement>> = achievementDao.getAll()
-
+    private val db = LiveDatabase.getDatabase(application)
 
     init {
         val stepCountDao = LiveDatabase.getDatabase(application).stepCountDao()
@@ -25,18 +25,6 @@ class StepCountViewModel(application: Application) : AndroidViewModel(applicatio
 
     fun getStepCountForDate(date: String): LiveData<StepCount?> {
         return repository.getStepCountForDate(date)
-    }
-
-    fun getTotalSteps(): LiveData<Int?> {
-        return repository.getTotalSteps()
-    }
-
-    fun getDaysWithMinimumSteps(): LiveData<List<String>> {
-        return repository.getDaysWithMinimumSteps()
-    }
-
-    fun insert(stepCount: StepCount) = viewModelScope.launch {
-        repository.insert(stepCount)
     }
 
     fun getStepHistory(): LiveData<List<StepCount>> {
@@ -50,17 +38,12 @@ class StepCountViewModel(application: Application) : AndroidViewModel(applicatio
         }
     }
 
-    private fun insertAchievements(achievements: List<Achievement>) {
-        viewModelScope.launch {
-            achievementDao.insertAll(*achievements.toTypedArray())
-        }
-    }
-
     fun initializeAchievements() {
         viewModelScope.launch {
             if (achievementDao.getAll().value.isNullOrEmpty()) {
                 val achievements = listOf(
                     Achievement("Ma Allora Cammini!", "Fai il tuo primo passo, benvenuto.", listOf(1), false),
+                    Achievement("Belli!!!", "Fai 50 passi in un giorno", listOf(50,1), false),
                     Achievement("Primo Passo", "Completa 1.000 passi in un giorno.", listOf(1000,1), false),
                     Achievement("Piccolo Camminatore", "Completa 5.000 passi in un giorno.", listOf(5000,1), false),
                     Achievement("Costanza Iniziale", "Completa 5.000 passi al giorno per 3 giorni consecutivi.", listOf(5000,3), false),

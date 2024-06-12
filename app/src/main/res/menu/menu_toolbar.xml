@@ -1,10 +1,5 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/action_logout"
-        android:title="Logout"
-        android:orderInCategory="100"
-         />
-    <item
         android:id="@+id/action_settings"
         android:title="Profile"
         android:orderInCategory="101"

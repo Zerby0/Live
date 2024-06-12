@@ -20,7 +20,8 @@ class SignUpActivity : AppCompatActivity() {
         binding = ActivitySignUpBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        Toast.makeText(this, "La password deve contenere almeno 6 caratteri.", Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, "La password deve contenere almeno 6 caratteri.", Toast.LENGTH_SHORT)
+            .show()
 
         binding.textView2.setOnClickListener {
             val intent = Intent(this, SignInActivity::class.java)
@@ -42,19 +43,21 @@ class SignUpActivity : AppCompatActivity() {
                         Toast.LENGTH_LONG
                     ).show()
                 } else {
-                    fbAuth.createUserWithEmailAndPassword(userMail, pw).addOnCompleteListener(this) {
-                        if (it.isSuccessful) {
-                            val intent = Intent(this, SignInActivity::class.java)
-                            startActivity(intent)
-                            finish()
-                        } else {
-                            Toast.makeText(
-                                this,
-                                "Autenticazione fallita, riprovare.",
-                                Toast.LENGTH_LONG
-                            ).show()
+                    fbAuth.createUserWithEmailAndPassword(userMail, pw)
+                        .addOnCompleteListener(this) {
+                            if (it.isSuccessful) {
+                                val intent = Intent(this, SignInActivity::class.java)
+                                startActivity(intent)
+                                finish()
+                            } else {
+                                Toast.makeText(
+                                    this,
+                                    "Autenticazione fallita, riprovare.",
+                                    Toast.LENGTH_LONG
+                                ).show()
+                            }
                         }
-                    }
+
                 }
             }
         }

@@ -1,7 +1,5 @@
 package com.example.live
 
-import android.content.ContentValues
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
@@ -10,6 +8,12 @@ import androidx.room.Query
 
 @Dao
 interface StepCountDao {
+    @Query("SELECT * FROM step_count")
+    fun getAllSync(): List<StepCount>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAll(vararg stepCount: StepCount)
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(stepCount: StepCount)
 

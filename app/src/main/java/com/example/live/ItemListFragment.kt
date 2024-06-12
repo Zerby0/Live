@@ -19,7 +19,7 @@ class ItemListFragment : Fragment() {
     private val currentDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
     private var _binding: FragmentItemListBinding? = null
     private val binding get() = _binding!!
-    private lateinit var viewModel: StepCountViewModel
+    private lateinit var viewModel: ViewModel
 
 
     override fun onCreateView(
@@ -27,7 +27,7 @@ class ItemListFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentItemListBinding.inflate(inflater, container, false)
-        viewModel = ViewModelProvider(this)[StepCountViewModel::class.java]
+        viewModel = ViewModelProvider(this)[ViewModel::class.java]
 
         // Inizializza gli achievement
         viewModel.initializeAchievements()
