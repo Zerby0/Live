@@ -40,4 +40,5 @@
     <string name="set_goal_vert">S\ne\nt\n \nG\no\na\nl</string>
     <string name="profile">Profile</string>
     <string name="change_image">change image</string>
+    <string name="email_effettiva_utente">Email effettiva utente</string>
 </resources>
