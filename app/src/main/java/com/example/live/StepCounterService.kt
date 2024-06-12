@@ -79,7 +79,7 @@ class StepCounterService : Service(), SensorEventListener {
         // Fa il messaggio di notifica che dice che conta i passi
         val notification: Notification = NotificationCompat.Builder(this, channelId)
             .setContentTitle("Servizio di StepCounter")
-            .setContentText("Contando i tuoi passi: $stepCount")
+            .setContentText("Contando i tuoi passi...")
             .setSmallIcon(R.drawable.logo)
             .setContentIntent(pendingIntent)
             .build()
