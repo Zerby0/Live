@@ -106,6 +106,6 @@ class StatisticsFragment : Fragment() {
         val bundle = Bundle().apply {
             putLong("time", time)
         }
-        fbAnalytics.logEvent("biometrics_fragment_switch", bundle)
+        fbAnalytics.logEvent("statistics_fragment_switch", bundle)
     }
 }
