@@ -49,4 +49,7 @@
     <string name="lazyday">lazyDay</string>
     <string name="averageweeksteps">averageWeekSteps</string>
     <string name="lazysteps">lazySteps</string>
+    <string name="total_steps">Total Steps</string>
+    <string name="avarage_week_steps">Avarage week steps</string>
+    <string name="lazy_day">Lazy Day :)</string>
 </resources>
