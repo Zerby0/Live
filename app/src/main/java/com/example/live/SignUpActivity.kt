@@ -16,7 +16,6 @@ class SignUpActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         fbAuth = FirebaseAuth.getInstance()
-
         binding = ActivitySignUpBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -32,7 +31,7 @@ class SignUpActivity : AppCompatActivity() {
             val userMail = binding.editTextText4.text.toString()
             val pw = binding.editTextText5.text.toString()
             val pwConfirm = binding.editTextText6.text.toString()
-
+            // Verifica campi vuoti e se l'autenticazione è nel formato corretto
             if (userMail.isEmpty() || pw.isEmpty() || pwConfirm.isEmpty()) {
                 Toast.makeText(this, "Non sono ammessi campi vuoti!", Toast.LENGTH_LONG).show()
             } else {

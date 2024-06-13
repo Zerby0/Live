@@ -13,14 +13,13 @@ class BiometricsFragment : Fragment() {
 
     private var _binding: FragmentBiometricBinding? = null
     private val binding get() = _binding!!
-    // Firebase
     private lateinit var fbAnalytics: FirebaseAnalytics
     private var startTime : Long = 0
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentBiometricBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -33,6 +32,7 @@ class BiometricsFragment : Fragment() {
             calculateBiometrics()
         }
     }
+    //Funzione per calcolare i dati biometrici
     private fun calculateBiometrics() {
         val selectedSexId = binding.radioGroupSex.checkedRadioButtonId
         val sex = if (selectedSexId == R.id.radioMale) "M" else if (selectedSexId == R.id.radioFemale) "F" else null
@@ -78,7 +78,7 @@ class BiometricsFragment : Fragment() {
 
         showDetailsScreen(bmi)
     }
-
+    //Funzione per visualizzare i suggerimenti in base all'IMC
     private fun showDetailsScreen(bmi : Double) {
 
         binding.fragmentContainer.removeAllViews()
@@ -116,6 +116,7 @@ class BiometricsFragment : Fragment() {
         val timeSpent = System.currentTimeMillis() - startTime
         fragmentSwitchLog(timeSpent)
     }
+    //Funzione per loggare i fragment switch
     private fun fragmentSwitchLog(time: Long) {
         val bundle = Bundle().apply {
             putLong("time", time)

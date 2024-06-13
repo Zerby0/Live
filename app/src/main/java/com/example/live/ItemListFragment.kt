@@ -25,7 +25,7 @@ class ItemListFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentItemListBinding.inflate(inflater, container, false)
         viewModel = ViewModelProvider(this)[ViewModel::class.java]
 
@@ -51,7 +51,7 @@ class ItemListFragment : Fragment() {
             checkAchievements(achievements)
         }
     }
-
+    // Funzione per controllare l'avanzamento degli achievement
     private fun checkAchievements(achievements: List<Achievement>) {
         viewModel.getStepCountForDate(currentDate).observe(viewLifecycleOwner) { stepCount ->
             stepCount?.let { currentStepCount ->
@@ -68,7 +68,7 @@ class ItemListFragment : Fragment() {
             }
         }
     }
-
+    // Funzione per controllare se un achievement è stato sbloccato
     private fun isAchievementUnlocked(achievement: Achievement, steps: Int, stepHistory: List<StepCount>): Boolean {
         val requiredSteps = achievement.condition[0]
 

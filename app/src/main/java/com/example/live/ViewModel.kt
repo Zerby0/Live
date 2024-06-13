@@ -31,13 +31,13 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
         return repository.getStepHistory()
     }
 
-    //Funzioni di achievemnt
+    // Funzione per controllare l'avanzamento degli achievement
     fun updateAchievement(achievement: Achievement) {
         viewModelScope.launch {
             achievementDao.update(achievement)
         }
     }
-
+    //Creazione degli achievement
     fun initializeAchievements() {
         viewModelScope.launch {
             if (achievementDao.getAll().value.isNullOrEmpty()) {

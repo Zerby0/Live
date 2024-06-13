@@ -36,14 +36,14 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        // Setup Firebase persistence
+        // Setup di Firebase
         setupFirebasePersistence()
 
-        // Initialize Firebase after setting persistence
+        // Inizia il servizio per il conteggio dei passi
         firebaseAuth = FirebaseAuth.getInstance()
         database = FirebaseDatabase.getInstance().reference
 
-        // Setup toolbar
+        // Setup della toolbar
         val tb = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(tb)
         supportActionBar?.setDisplayShowTitleEnabled(false)
@@ -52,22 +52,22 @@ class MainActivity : AppCompatActivity() {
         Log.v(ContentValues.TAG, "Si sta avviando l'app")
         val userData: MutableMap<String, String> = HashMap()
 
-        // For LogRocket
+        //LogRocket
         userData["email"] = intent.getStringExtra("user_email").orEmpty()
         SDK.identify("28dvm2jfa", userData)
         Log.v(ContentValues.TAG, "Identity funziona")
 
-        // Initialize Room database
+        // Inizializza il Room database
         LiveDatabase.getDatabase(this)
 
-        // Navigation setup
+        // Setup del BottomNavigationView
         val navHostFragment = supportFragmentManager
             .findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         val navController = navHostFragment.navController
         val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
         bottomNavigationView.setupWithNavController(navController)
 
-        // Check runtime permissions
+        // Check dei permessi in real-time
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACTIVITY_RECOGNITION)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -80,7 +80,7 @@ class MainActivity : AppCompatActivity() {
             startStepCounterService()
         }
 
-        // Initialize SharedPreferences
+        // Inizializza le SharedPreferences
         sharedPreferences = getSharedPreferences("stepCounterPrefs", Context.MODE_PRIVATE)
 
         val userEmail = intent.getStringExtra("user_email")
@@ -92,16 +92,16 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
-
+    // Funzione per inizializzare la persistenza di Firebase
     private fun setupFirebasePersistence() {
         try {
             FirebaseDatabase.getInstance().setPersistenceEnabled(true)
         } catch (e: DatabaseException) {
-            // Firebase persistence was already enabled
+
             Log.w(ContentValues.TAG, "Firebase persistence is already enabled")
         }
     }
-
+    // Funzione per ottenere le SharedPreferences dell'utente
     private fun getUserSpecificPreferences(userEmail: String): SharedPreferences {
         return getSharedPreferences("stepCounterPrefs_$userEmail", Context.MODE_PRIVATE)
     }
@@ -110,7 +110,7 @@ class MainActivity : AppCompatActivity() {
         super.onDestroy()
         saveUserData()
     }
-
+    // Funzione per salvare i dati dell'utente
     private fun saveUserData() {
         val userEmail = intent.getStringExtra("user_email") ?: return
         val userPrefs = getUserSpecificPreferences(userEmail)
@@ -119,12 +119,12 @@ class MainActivity : AppCompatActivity() {
         editor.putFloat("calorieCount", calorieCount.toFloat())
         editor.apply()
     }
-
+    // Funzione per avviare il servizio di conteggio dei passi
     private fun startStepCounterService() {
         val intent = Intent(this, StepCounterService::class.java)
         startForegroundService(intent)
     }
-
+    // Funzione per gestire la scelta dell'utente sui permessi
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == REQUEST_CODE) {
@@ -138,7 +138,7 @@ class MainActivity : AppCompatActivity() {
         menuInflater.inflate(R.menu.menu_toolbar, menu)
         return true
     }
-
+    // Funzione per gestire la scelta dell'utente nella toolbar
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.action_settings -> {

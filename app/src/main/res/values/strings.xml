@@ -41,4 +41,8 @@
     <string name="profile">Profile</string>
     <string name="change_image">change image</string>
     <string name="email_effettiva_utente">Email effettiva utente</string>
+    <string name="stat">stat</string>
+    <string name="home">home</string>
+    <string name="bio">bio</string>
+    <string name="suggerimenti_basati_sull_imc">Suggerimenti basati sull\'IMC</string>
 </resources>

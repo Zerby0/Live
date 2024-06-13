@@ -21,14 +21,11 @@ class ProfileFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment using view binding
+    ): View {
         binding = FragmentProfileBinding.inflate(inflater, container, false)
-
-        // Inizializza SharedPreferences
         sharedPreferences = requireActivity().getPreferences(Context.MODE_PRIVATE)
 
-        // Carica l'URI dell'immagine salvato
+        // Carica l'URI dell'immagine salvato nelle SharedPreferences
         val uriString = sharedPreferences.getString("selected_image_uri", null)
         uriString?.let {
             selectedImageUri = Uri.parse(it)
@@ -36,18 +33,15 @@ class ProfileFragment : Fragment() {
             loadCircularImage(selectedImageUri)
         }
 
-        //Per la visualizzazione della mail di login
+        //Visualizzazione della mail dell'utente
         val sharedPref = requireActivity().getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
         val userEmail = sharedPref.getString("user_email", "Email non disponibile")
         binding.textView12.text = userEmail
 
-        // Definisci pickMedia all'interno di onCreateView
         val pickMedia = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
             if (uri != null) {
                 selectedImageUri = uri
-                // Carica e mostra l'immagine
                 loadCircularImage(selectedImageUri)
-                // Salva l'URI dell'immagine selezionata quando l'applicazione viene chiusa
                 sharedPreferences.edit().putString("selected_image_uri", uri.toString()).apply()
             }
         }
@@ -58,7 +52,7 @@ class ProfileFragment : Fragment() {
 
         return binding.root
     }
-
+    // Funzione per caricare l'immagine con forma circolare
     private fun loadCircularImage(uri: Uri?) {
         Glide.with(this)
             .load(uri)

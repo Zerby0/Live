@@ -5,10 +5,8 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.app.Service
-import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
@@ -16,14 +14,12 @@ import android.hardware.SensorManager
 import android.os.IBinder
 import android.util.Log
 import androidx.core.app.NotificationCompat
-import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class StepCounterService : Service(), SensorEventListener {
 
@@ -39,10 +35,10 @@ class StepCounterService : Service(), SensorEventListener {
         // Inizializza il SensorManager per ottenere i sensori di sistema
         sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
 
-        // Prendi il sensore di tipo STEP_COUNTER (contapassi)
+        // Prende il sensore di tipo STEP_COUNTER (contapassi)
         stepCounterSensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER)
 
-        // Avvia il servizio in foreground
+
         startForegroundService()
 
         // Registra il listener per il sensore di contapassi se il sensore è disponibile
@@ -76,9 +72,9 @@ class StepCounterService : Service(), SensorEventListener {
         val pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent,
             PendingIntent.FLAG_IMMUTABLE)
 
-        // Fa il messaggio di notifica che dice che conta i passi
+        // Mostra il messaggio di notifica del servizio in esecuzione
         val notification: Notification = NotificationCompat.Builder(this, channelId)
-            .setContentTitle("Servizio di StepCounter")
+            .setContentTitle("LIVE")
             .setContentText("Contando i tuoi passi...")
             .setSmallIcon(R.drawable.logo)
             .setContentIntent(pendingIntent)
@@ -86,7 +82,7 @@ class StepCounterService : Service(), SensorEventListener {
 
         startForeground(1, notification)
     }
-
+    // Funzione chiamata quando i dati del sensore cambiano
     override fun onSensorChanged(event: SensorEvent?) {
         if (event != null && event.sensor.type == Sensor.TYPE_STEP_COUNTER) {
             val totalStepCount = event.values[0].toInt()
@@ -114,12 +110,11 @@ class StepCounterService : Service(), SensorEventListener {
     }
 
     override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
-        // Gestisci i cambiamenti di accuratezza se necessario
+       //Non è necessario implementare cambiamenti di accuratezza
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        // Deregistra il listener del sensore per risparmiare energia
         sensorManager.unregisterListener(this)
     }
 

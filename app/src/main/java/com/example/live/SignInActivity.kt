@@ -36,6 +36,7 @@ class SignInActivity : AppCompatActivity() {
             val userMail = binding.editTextText7.text.toString()
             val pw = binding.editTextTextPassword.text.toString()
 
+            // Verifica campi vuoti e se l'autenticazione è nel formato corretto
             if (userMail.isEmpty() || pw.isEmpty()) {
                 Toast.makeText(this, "Non sono ammessi campi vuoti!", Toast.LENGTH_LONG).show()
             } else {
@@ -61,7 +62,7 @@ class SignInActivity : AppCompatActivity() {
             }
         }
     }
-
+    // Funzione per controllare se l'utente è già loggato
     private fun checkLoggedInUser(): Boolean {
         val sharedPref = getSharedPreferences("logged_users", Context.MODE_PRIVATE)
         val loggedUser = sharedPref.getString("user", null)
@@ -89,10 +90,9 @@ class SignInActivity : AppCompatActivity() {
         }
         return false
     }
-
+    // Funzione per raccogliere i dati dell'utente per Firebase
     private fun collectUserData() : Bundle {
         val dataBundle = Bundle()
-        // Info dispositivo
         dataBundle.apply {
             putLong("time", System.currentTimeMillis())
             putString("device", android.os.Build.DEVICE)

@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.example.live.databinding.FragmentStatisticBinding
 import com.github.mikephil.charting.components.XAxis
@@ -24,14 +23,14 @@ class StatisticsFragment : Fragment() {
     private var _binding: FragmentStatisticBinding? = null
     private val binding get() = _binding!!
     private val viewModel: ViewModel by viewModels()
-    // Firebase
+
     private lateinit var fbAnalytics: FirebaseAnalytics
     private var startTime : Long = 0
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentStatisticBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -44,7 +43,7 @@ class StatisticsFragment : Fragment() {
         binding.btnAchievement.setOnClickListener {
             findNavController().navigate(R.id.action_statistic_to_achievement)
         }
-
+        // Gestione del grafico
         viewModel.getWeeklySteps().observe(viewLifecycleOwner) { stepCounts ->
             val entries = ArrayList<BarEntry>()
             val dates = ArrayList<String>()
@@ -102,6 +101,7 @@ class StatisticsFragment : Fragment() {
         val timeSpent = System.currentTimeMillis() - startTime
         fragmentSwitchLog(timeSpent)
     }
+    //Funzione per loggare i fragment switch
     private fun fragmentSwitchLog(time: Long) {
         val bundle = Bundle().apply {
             putLong("time", time)

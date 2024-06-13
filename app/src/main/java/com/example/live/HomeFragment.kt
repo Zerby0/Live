@@ -20,7 +20,6 @@ class HomeFragment : Fragment() {
     private var _binding: FragmentHomeBinding? = null
 
     private val binding get() = _binding!!
-    // Firebase
     private lateinit var fbAnalytics: FirebaseAnalytics
     private var startTime : Long = 0
 
@@ -66,7 +65,7 @@ class HomeFragment : Fragment() {
             }
         }
     }
-
+    // Aggiorna i dati dei passi e delle calorie
     private fun updateStepCount(stepCount: Int, calorieCount: Double) {
         binding.passiText.text = "Steps: $stepCount"
         binding.calorieBruciateText.text = "Calories: $calorieCount"
@@ -74,6 +73,7 @@ class HomeFragment : Fragment() {
         Log.e(TAG, "Stato dei passi updatato $stepCount")
     }
 
+    // Aggiorna la barra di avanzamento
     private fun updateProgressBar(stepCount: Int) {
         val progressPercentage = (stepCount.toDouble() / stepGoal) * 100
         binding.progressBar.progress = progressPercentage.toInt().coerceAtMost(100)
@@ -94,6 +94,7 @@ class HomeFragment : Fragment() {
         val timeSpent = System.currentTimeMillis() - startTime
         fragmentSwitchLog(timeSpent)
     }
+    //Funzione per loggare i fragment switch
     private fun fragmentSwitchLog(time: Long) {
         val bundle = Bundle().apply {
             putLong("time", time)

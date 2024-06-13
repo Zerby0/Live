@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <style name="Theme.Live" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="colorPrimary">@color/logo_blue</item>
-        <item name="colorPrimaryVariant">@color/logo_red</item>
-        <item name="colorOnPrimary">@color/logo_teal</item>
+        <item name="colorPrimary">@color/lite_grey</item>
         <item name="android:windowFullscreen">true</item>
     </style>
 
