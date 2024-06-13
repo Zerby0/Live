@@ -25,7 +25,8 @@ import com.google.firebase.database.FirebaseDatabase
 import com.logrocket.core.SDK
 class MainActivity : AppCompatActivity() {
 
-    private val REQUEST_CODE = 100
+    @Suppress("PrivatePropertyName")
+    private val CODE = 100
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var firebaseAuth: FirebaseAuth
     private lateinit var database: DatabaseReference
@@ -72,7 +73,7 @@ class MainActivity : AppCompatActivity() {
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACTIVITY_RECOGNITION)
                 != PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACTIVITY_RECOGNITION),
-                    REQUEST_CODE)
+                    CODE)
             } else {
                 startStepCounterService()
             }
@@ -127,7 +128,7 @@ class MainActivity : AppCompatActivity() {
     // Funzione per gestire la scelta dell'utente sui permessi
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == REQUEST_CODE) {
+        if (requestCode == CODE) {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 startStepCounterService()
             }

@@ -1,15 +1,15 @@
 package com.example.live
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.SharedPreferences
 import android.net.Uri
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.lifecycle.Observer
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.example.live.databinding.FragmentProfileBinding
@@ -21,6 +21,7 @@ class ProfileFragment : Fragment() {
     private lateinit var binding: FragmentProfileBinding
     private lateinit var viewModel: ViewModel
 
+    @SuppressLint("SetTextI18n")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -57,20 +58,20 @@ class ProfileFragment : Fragment() {
         viewModel.fetchDayWithLeastSteps()
 
         // Osserva il giorno con meno passi e aggiorna la TextView
-        viewModel.dayWithLeastSteps.observe(viewLifecycleOwner, Observer { day ->
+        viewModel.dayWithLeastSteps.observe(viewLifecycleOwner) { day ->
             if (day != null) {
                 binding.lazyDay.text = day.date
-                binding.lazySteps.text= day.steps.toString()
+                binding.lazySteps.text = day.steps.toString()
             } else {
                 binding.lazyDay.text = "NaN"
                 binding.lazySteps.text = "404"
             }
-        })
+        }
 
         // Osserva la media settimanale dei passi e aggiorna la TextView
-        viewModel.weeklyAverageSteps.observe(viewLifecycleOwner, Observer { averageSteps ->
+        viewModel.weeklyAverageSteps.observe(viewLifecycleOwner) { averageSteps ->
             binding.averageWeekSteps.text = averageSteps.toString()
-        })
+        }
 
         // Osserva il totale degli step e aggiorna la TextView
         viewModel.totalSteps.observe(viewLifecycleOwner) { totalSteps ->

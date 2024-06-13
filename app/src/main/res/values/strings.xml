@@ -1,18 +1,11 @@
 <resources>
     <string name="app_name">Live</string>
-    <string name="back">BACK</string>
-    <string name="title_activity_sign_up">SignUpActivity</string>
-    <string name="title_activity_sign_in">SignInActivity</string>
-    <string name="step_text">Steps</string>
-    <string name="calories_text">Calories</string>
     <string name="age">Age</string>
     <string name="f">F</string>
     <string name="m">M</string>
     <string name="calcola">Calcola</string>
     <string name="height_cm">Height (cm)</string>
     <string name="weight_kg">Weight (kg)</string>
-    <string name="risultati">Risultati</string>
-    <string name="achievement_completed">Achievement completed</string>
     <string name="achievement_not_completed">Achievement not completed</string>
     <string-array name="laf_values">
         <item>Sedentario</item>
@@ -22,8 +15,6 @@
         <item>tutti i giorni</item>
     </string-array>
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="achievemnts">Achievemnts</string>
     <string name="quest">Quest</string>
     <string name="password">Password</string>
     <string name="sign_in">Sign In</string>
@@ -36,7 +27,6 @@
     <string name="daily_step_goal">Daily step goal</string>
     <string name="calories_0">Calories: 0</string>
     <string name="steps_0">Steps: 0</string>
-    <string name="logout">Logout</string>
     <string name="set_goal_vert">S\ne\nt\n \nG\no\na\nl</string>
     <string name="profile">Profile</string>
     <string name="change_image">change image</string>
@@ -47,8 +37,8 @@
     <string name="suggerimenti_basati_sull_imc">Suggerimenti basati sull\'IMC</string>
     <string name="total_steps_0">Total Steps: 0</string>
     <string name="lazyday">lazyDay</string>
-    <string name="averageweeksteps">averageWeekSteps</string>
     <string name="lazysteps">lazySteps</string>
+    <string name="averageweeksteps">averageWeekSteps</string>
     <string name="total_steps">Total Steps</string>
     <string name="avarage_week_steps">Avarage week steps</string>
     <string name="lazy_day">Lazy Day :)</string>

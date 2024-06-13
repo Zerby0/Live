@@ -24,6 +24,7 @@
         android:layout_width="150dp"
         android:layout_height="49dp"
         android:layout_marginTop="4dp"
+        android:autofillHints=""
         android:background="@drawable/edittext_background"
         android:gravity="center"
         android:hint="@string/daily_step_goal"

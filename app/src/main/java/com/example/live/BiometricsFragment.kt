@@ -1,5 +1,6 @@
 package com.example.live
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -33,6 +34,7 @@ class BiometricsFragment : Fragment() {
         }
     }
     //Funzione per calcolare i dati biometrici
+    @SuppressLint("SetTextI18n", "DefaultLocale")
     private fun calculateBiometrics() {
         val selectedSexId = binding.radioGroupSex.checkedRadioButtonId
         val sex = if (selectedSexId == R.id.radioMale) "M" else if (selectedSexId == R.id.radioFemale) "F" else null
@@ -69,12 +71,7 @@ class BiometricsFragment : Fragment() {
         val leanBodyMass = weight * (1 - bodyFatPercentage / 100)
         val fatMass = weight - leanBodyMass
 
-        binding.tvResults.text = """
-            Indice di Massa Corporea (IMC): ${String.format("%.2f", bmi)}
-            Massa Magra: ${String.format("%.2f", leanBodyMass)} kg
-            Massa Grassa: ${String.format("%.2f", fatMass)} kg
-            Fabbisogno Energetico: ${String.format("%.2f", tdee)} kcal
-        """.trimIndent()
+        binding.tvResults.text = "Indice di Massa Corporea (IMC): ${String.format("%.2f", bmi)} \nMassa Magra: ${String.format("%.2f", leanBodyMass)} kg \nMassa Grassa: ${String.format("%.2f", fatMass)} kg \nFabbisogno Energetico: ${String.format("%.2f", tdee)} kcal"
 
         showDetailsScreen(bmi)
     }

@@ -71,6 +71,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="180dp"
+        android:autofillHints=""
         android:gravity="center"
         android:hint="@string/set_goal"
         android:background="@drawable/edittext_background"

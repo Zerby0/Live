@@ -25,7 +25,7 @@
         <service
             android:name=".StepCounterService"
             android:enabled="true"
-            android:exported="true"
+            android:exported="false"
             android:foregroundServiceType="health"/>
         <activity
             android:name=".SignInActivity"

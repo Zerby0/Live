@@ -64,7 +64,7 @@ class ItemListFragment : Fragment() {
                             achievement.isCompleted = true
                             viewModel.updateAchievement(achievement)
                         }
-                        adapter.notifyDataSetChanged()
+                        adapter.setAchievements(achievements)
                     }
                 }
             }
@@ -73,7 +73,7 @@ class ItemListFragment : Fragment() {
     // Funzione per controllare se un achievement è stato sbloccato
     private fun isAchievementUnlocked(achievement: Achievement, steps: Int, stepHistory: List<StepCount>): Boolean {
         val requiredSteps = achievement.condition[0]
-        Log.e(TAG, "${achievement.title}")
+        Log.e(TAG, achievement.title)
         if(achievement.isCompleted) return true
 
         return when (achievement.condition.size) {

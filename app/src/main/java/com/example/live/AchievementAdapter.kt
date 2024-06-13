@@ -5,6 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 
 
@@ -33,9 +34,28 @@ class AchievementAdapter(private var achievements: List<Achievement>) :
     }
 
     fun setAchievements(newAchievements: List<Achievement>) {
+        val diffResult = DiffUtil.calculateDiff(AchievementDiffCallback(achievements, newAchievements))
         achievements = newAchievements
-        notifyDataSetChanged()
+        diffResult.dispatchUpdatesTo(this)
     }
 
     override fun getItemCount(): Int = achievements.size
+
+    class AchievementDiffCallback(
+        private val oldList: List<Achievement>,
+        private val newList: List<Achievement>
+    ) : DiffUtil.Callback() {
+
+        override fun getOldListSize(): Int = oldList.size
+
+        override fun getNewListSize(): Int = newList.size
+
+        override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+            return oldList[oldItemPosition].title == newList[newItemPosition].title
+        }
+
+        override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+            return oldList[oldItemPosition] == newList[newItemPosition]
+        }
+    }
 }

@@ -1,5 +1,6 @@
 package com.example.live
 
+import android.annotation.SuppressLint
 import android.content.ContentValues.TAG
 import android.content.Context
 import android.os.Bundle
@@ -66,6 +67,7 @@ class HomeFragment : Fragment() {
         }
     }
     // Aggiorna i dati dei passi e delle calorie
+    @SuppressLint("SetTextI18n")
     private fun updateStepCount(stepCount: Int, calorieCount: Double) {
         binding.passiText.text = "Steps: $stepCount"
         binding.calorieBruciateText.text = "Calories: $calorieCount"
