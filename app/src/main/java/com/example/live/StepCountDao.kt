@@ -29,7 +29,7 @@ interface StepCountDao {
     @Query("SELECT * FROM step_count WHERE date = :date LIMIT 1")
     fun getStepCountForDate(date: String): LiveData<StepCount?>
 
-    @Query("SELECT * FROM step_count ORDER BY date DESC")
+    @Query("SELECT * FROM step_count ORDER BY date ASC")
     fun getStepHistory(): LiveData<List<StepCount>>
 
     @Query("SELECT * FROM step_count WHERE date IN (:dates)")

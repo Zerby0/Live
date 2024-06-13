@@ -1,6 +1,8 @@
 package com.example.live
 
 import android.app.Application
+import android.content.ContentValues.TAG
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -40,10 +42,13 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
     //Creazione degli achievement
     fun initializeAchievements() {
         viewModelScope.launch {
-            if (achievementDao.getAll().value.isNullOrEmpty()) {
+            val achievement = achievementDao.getAchievementByTitleSync("Ma Allora Cammini!")
+            if (achievement == null) {
+                Log.e(TAG, "Achievement resettati")
                 val achievements = listOf(
                     Achievement("Ma Allora Cammini!", "Fai il tuo primo passo, benvenuto.", listOf(1), false),
                     Achievement("Belli!!!", "Fai 50 passi in un giorno", listOf(50,1), false),
+                    Achievement("Alzati dal divano", "Fai 75 passi in un giorno", listOf(75,1), false),
                     Achievement("Primo Passo", "Completa 1.000 passi in un giorno.", listOf(1000,1), false),
                     Achievement("Piccolo Camminatore", "Completa 5.000 passi in un giorno.", listOf(5000,1), false),
                     Achievement("Costanza Iniziale", "Completa 5.000 passi al giorno per 3 giorni consecutivi.", listOf(5000,3), false),

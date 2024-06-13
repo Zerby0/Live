@@ -9,13 +9,14 @@
         android:id="@+id/passi_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="132dp"
         android:text="@string/steps_0"
         android:textSize="40sp"
         android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.151" />
 
     <TextView
         android:id="@+id/calorie_bruciate_text"
@@ -56,10 +57,12 @@
         android:background="@drawable/rounded_button"
         android:text="@string/set_goal"
         android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.501"
+        app:layout_constraintHorizontal_bias="0.494"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/goalInput" />
+        app:layout_constraintTop_toBottomOf="@+id/goalInput"
+        app:layout_constraintVertical_bias="0.085" />
 
     <EditText
         android:id="@+id/goalInput"

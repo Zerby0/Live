@@ -27,7 +27,7 @@ class StepCounterService : Service(), SensorEventListener {
     private var stepCounterSensor: Sensor? = null
     private var stepCount = 0
     private var initialStepCount = -1
-    private val currentDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
+    private var globalDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
 
     override fun onCreate() {
         super.onCreate()
@@ -84,6 +84,12 @@ class StepCounterService : Service(), SensorEventListener {
     }
     // Funzione chiamata quando i dati del sensore cambiano
     override fun onSensorChanged(event: SensorEvent?) {
+        //Prende la data di oggi e la confronta con la data globale che non si aggiorna se cambio data dalle impostazioni
+        val currentDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
+        if(currentDate != globalDate){
+            initialStepCount = stepCount
+            globalDate = currentDate
+        }
         if (event != null && event.sensor.type == Sensor.TYPE_STEP_COUNTER) {
             val totalStepCount = event.values[0].toInt()
             if (initialStepCount < 0) {

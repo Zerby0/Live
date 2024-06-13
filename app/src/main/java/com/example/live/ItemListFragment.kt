@@ -1,6 +1,8 @@
 package com.example.live
 
+import android.content.ContentValues.TAG
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -71,13 +73,18 @@ class ItemListFragment : Fragment() {
     // Funzione per controllare se un achievement è stato sbloccato
     private fun isAchievementUnlocked(achievement: Achievement, steps: Int, stepHistory: List<StepCount>): Boolean {
         val requiredSteps = achievement.condition[0]
+        Log.e(TAG, "${achievement.title}")
+        if(achievement.isCompleted) return true
 
         return when (achievement.condition.size) {
             1 -> { // achievement basato su passi totali
+                Log.e(TAG, "Numero di Condizioni ${achievement.condition.size}  Passi richiesti $requiredSteps")
                 steps >= requiredSteps
             }
             2 -> { // achievement basato su passi giornalieri
                 val requiredDays = achievement.condition[1]
+                Log.e(TAG, "Numero di Condizioni ${achievement.condition.size}  Passi richiesti $requiredSteps Numero di giorni: $requiredDays")
+                Log.e(TAG, "Giorno in questione: ${stepHistory.takeLast(requiredDays).map { it.date }}")
                 stepHistory.takeLast(requiredDays).all { it.steps >= requiredSteps }
             }
             3 -> { // achievement basato su passi giornalieri consecutivi

@@ -12,6 +12,9 @@ interface AchievementDao {
     @Query("SELECT * FROM achievements")
     fun getAllSync(): List<Achievement>
 
+    @Query("SELECT * FROM achievements WHERE title = :title LIMIT 1")
+    suspend fun getAchievementByTitleSync(title: String): Achievement?
+
     @Query("SELECT * FROM achievements")
     fun getAll(): LiveData<List<Achievement>>
 
