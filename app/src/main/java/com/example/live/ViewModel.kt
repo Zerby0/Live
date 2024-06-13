@@ -17,12 +17,15 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
     private val allStepCounts: LiveData<List<StepCount>>
     private val achievementDao = LiveDatabase.getDatabase(application).achievementDao()
     val allAchievements: LiveData<List<Achievement>> = achievementDao.getAll()
-    private val db = LiveDatabase.getDatabase(application)
+    val totalSteps: LiveData<Int?>
+    val weeklyAverageSteps = MutableLiveData<Int>()
+    val dayWithLeastSteps = MutableLiveData<StepCount?>()
 
     init {
         val stepCountDao = LiveDatabase.getDatabase(application).stepCountDao()
         repository = StepCountRepository(stepCountDao)
         allStepCounts = repository.getAllStepCounts()
+        totalSteps =  repository.getTotalSteps()
     }
 
     fun getStepCountForDate(date: String): LiveData<StepCount?> {
@@ -75,6 +78,21 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
+    fun calculateWeeklyAverageSteps() {
+        viewModelScope.launch {
+            val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+            val calendar = Calendar.getInstance()
+            val endDate = sdf.format(calendar.time)
+            calendar.add(Calendar.DAY_OF_YEAR, -6)
+            val startDate = sdf.format(calendar.time)
+
+            val steps = repository.getWeeklySteps(startDate, endDate)
+            val totalSteps = steps.sumOf { it.steps }
+            val averageSteps = if (steps.isNotEmpty()) totalSteps / 7.0 else 0.0
+            weeklyAverageSteps.postValue(averageSteps.toInt())
+        }
+    }
+
     fun getWeeklySteps(): LiveData<List<StepCount>> {
         val weeklySteps = MutableLiveData<List<StepCount>>()
         val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
@@ -93,5 +111,12 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
         }
 
         return weeklySteps
+    }
+
+    fun fetchDayWithLeastSteps() {
+        viewModelScope.launch {
+            val day = repository.getDayWithLeastSteps()
+            dayWithLeastSteps.postValue(day)
+        }
     }
 }

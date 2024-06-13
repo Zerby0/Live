@@ -45,4 +45,8 @@
     <string name="home">home</string>
     <string name="bio">bio</string>
     <string name="suggerimenti_basati_sull_imc">Suggerimenti basati sull\'IMC</string>
+    <string name="total_steps_0">Total Steps: 0</string>
+    <string name="lazyday">lazyDay</string>
+    <string name="averageweeksteps">averageWeekSteps</string>
+    <string name="lazysteps">lazySteps</string>
 </resources>

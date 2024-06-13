@@ -7,6 +7,10 @@ class StepCountRepository(private val stepCountDao: StepCountDao) {
         return stepCountDao.getStepCountForDate(date)
     }
 
+    fun getTotalSteps(): LiveData<Int?> {
+        return stepCountDao.getTotalSteps()
+    }
+
     fun getAllStepCounts(): LiveData<List<StepCount>> {
         return stepCountDao.getAllStepCounts()
     }
@@ -17,5 +21,12 @@ class StepCountRepository(private val stepCountDao: StepCountDao) {
 
     fun getStepHistory(): LiveData<List<StepCount>>{
         return stepCountDao.getStepHistory()
+    }
+    suspend fun getWeeklySteps(startDate: String, endDate: String): List<StepCount> {
+        return stepCountDao.getStepsForDateRange(startDate, endDate)
+    }
+
+    suspend fun getDayWithLeastSteps(): StepCount? {
+        return stepCountDao.getDayWithLeastSteps()
     }
 }

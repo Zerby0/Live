@@ -20,6 +20,12 @@ interface StepCountDao {
     @Query("SELECT * FROM step_count")
     fun getAllStepCounts(): LiveData<List<StepCount>>
 
+    @Query("SELECT * FROM step_count ORDER BY steps ASC LIMIT 1")
+    suspend fun getDayWithLeastSteps(): StepCount?
+
+    @Query("SELECT * FROM step_count WHERE date >= :startDate AND date <= :endDate ORDER BY date DESC")
+    suspend fun getStepsForDateRange(startDate: String, endDate: String): List<StepCount>
+
     @Query("SELECT SUM(steps) FROM step_count")
     fun getTotalSteps(): LiveData<Int?>
 
